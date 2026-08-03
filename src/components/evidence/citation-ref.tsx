@@ -44,12 +44,11 @@ export function CitationRef({
             target="_blank"
             rel="noreferrer"
             className={cn(
-              // Sits on the baseline with a small lift rather than as a true
-              // superscript — full superscript at this density opened visible
-              // gaps in the leading of every paragraph containing a reference.
-              "mx-[0.15em] inline-flex items-baseline rounded-sm font-mono text-[0.62em] leading-none",
-              "relative -top-[0.15em] text-primary/90 underline decoration-dotted underline-offset-2",
-              "hover:text-primary hover:decoration-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+              // Sizing and the baseline lift live in the .citation-ref class:
+              // full superscript at this density opened visible gaps in the
+              // leading of every paragraph containing a reference.
+              "citation-ref inline-flex items-baseline rounded-sm text-text-body",
+              "hover:text-text-strong hover:decoration-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted",
               className,
             )}
           />
@@ -67,7 +66,7 @@ export function CitationRef({
           {citation.keyFinding}
         </p>
         {url && (
-          <p className="mt-3 flex items-center gap-1 font-mono text-[0.6875rem] text-primary">
+          <p className="mt-3 flex items-center gap-1 font-mono text-ui-2xs text-text-strong">
             <ExternalLink className="size-3" aria-hidden="true" />
             {citation.doi ? `doi:${citation.doi}` : `PMID ${citation.pmid}`}
           </p>

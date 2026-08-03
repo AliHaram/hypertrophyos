@@ -26,9 +26,9 @@ export function OverloadLeversModule() {
   const lever = getLever(selected);
 
   return (
-    <div className="my-8 overflow-hidden rounded-lg border border-border bg-card/50">
+    <div className="my-8 overflow-hidden rounded-md border border-border bg-card/50">
       <div className="border-b border-border px-4 py-3 sm:px-5">
-        <h3 className="font-heading text-base font-semibold leading-tight">
+        <h3 className="font-prose text-base font-semibold leading-tight">
           Six levers, not one
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -53,13 +53,13 @@ export function OverloadLeversModule() {
               onClick={() => setSelected(candidate.id)}
               className={cn(
                 "flex min-h-12 flex-1 flex-col justify-center gap-1.5 px-4 py-3 text-left transition-colors",
-                "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
+                "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-text-muted",
                 isSelected
                   ? "bg-accent text-accent-foreground"
                   : "hover:bg-muted/60",
               )}
             >
-              <span className="font-mono text-[0.6875rem] uppercase tracking-[0.1em]">
+              <span className="font-mono text-ui-2xs uppercase tracking-eyebrow">
                 {candidate.name}
               </span>
               <span
@@ -70,9 +70,9 @@ export function OverloadLeversModule() {
                   <span
                     key={index}
                     className={cn(
-                      "h-1 w-3 rounded-full",
+                      "h-1 w-3 rounded-sm",
                       index < candidate.potency
-                        ? "bg-primary"
+                        ? "bg-text-strong"
                         : "bg-muted-foreground/25",
                     )}
                   />
@@ -90,7 +90,7 @@ export function OverloadLeversModule() {
         className="px-4 py-5 sm:px-5"
       >
         <div className="mb-4 flex flex-wrap items-center gap-3">
-          <h4 className="font-heading text-lg font-semibold">{lever.name}</h4>
+          <h4 className="font-prose text-lg font-semibold">{lever.name}</h4>
           <EvidenceChip grade={lever.evidenceGrade} />
         </div>
 

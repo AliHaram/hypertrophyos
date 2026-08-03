@@ -99,7 +99,7 @@ export function VolumeLandmarkScale() {
             {[0, 7, 14, 21, 28].map((tick) => (
               <span
                 key={tick}
-                className="absolute font-mono text-[0.625rem] tabular-nums text-muted-foreground"
+                className="absolute font-mono text-ui-2xs tabular-nums text-muted-foreground"
                 style={{
                   left: `${percent(tick)}%`,
                   // The end ticks anchor to their edge instead of centring, so
@@ -116,7 +116,7 @@ export function VolumeLandmarkScale() {
               </span>
             ))}
           </div>
-          <p className="mt-3 text-right font-mono text-[0.625rem] uppercase tracking-[0.1em] text-muted-foreground">
+          <p className="mt-3 text-right font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground">
             sets / week
           </p>
         </div>

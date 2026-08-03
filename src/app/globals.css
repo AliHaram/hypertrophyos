@@ -1,165 +1,77 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 @import "shadcn/tailwind.css";
-
-@custom-variant dark (&:is(.dark *));
+@import "./tokens.generated.css";
 
 /*
-  HypertrophyOS design tokens.
+  HypertrophyOS.
 
-  Direction: laboratory instrumentation, not gym app. Deep blue-slate ground,
-  a single cool cyan for interactive/brand, and three reserved semantic hues
-  that belong exclusively to the evidence-grading system. Nothing else in the
-  interface is allowed to use evidence green/amber/red — if it is that color,
-  it is making a claim about evidence strength.
+  Register: scientific publishing and clinical instrumentation. The typography
+  of a well-set journal, the density of a professional terminal, the
+  draftsmanship of an anatomical atlas.
+
+  The rule that governs everything: chrome is achromatic. Backgrounds,
+  surfaces, borders, text, icons, buttons, and navigation all draw from one
+  warm-neutral ramp. Hue appears only where it encodes meaning. When the user
+  sees colour, it is carrying information.
+
+  Tokens are generated from src/lib/design/tokens.ts — never edit values here.
+  See docs/design-principles.md.
 */
 
+@custom-variant dark (&:is([data-surface="dark"] *));
+
+/* ---------------------------------------------------------------------------
+   shadcn primitive bridge
+
+   The vendored primitives expect --background, --foreground, --border and so
+   on. Rather than fork every one, those names are remapped onto the ramp so
+   the primitives inherit the design system instead of overriding it.
+   --------------------------------------------------------------------------- */
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-archivo);
-  --font-serif: var(--font-newsreader);
-  --font-mono: var(--font-jetbrains-mono);
-  --font-heading: var(--font-newsreader);
+  --color-background: var(--surface-background);
+  --color-foreground: var(--surface-text-body);
+  --color-card: var(--surface-surface);
+  --color-card-foreground: var(--surface-text-body);
+  --color-popover: var(--surface-surface-raised);
+  --color-popover-foreground: var(--surface-text-body);
+  --color-primary: var(--surface-text-strong);
+  --color-primary-foreground: var(--surface-background);
+  --color-secondary: var(--surface-surface-raised);
+  --color-secondary-foreground: var(--surface-text-body);
+  --color-muted: var(--surface-surface-raised);
+  --color-muted-foreground: var(--surface-text-muted);
+  --color-accent: var(--surface-surface-raised);
+  --color-accent-foreground: var(--surface-text-strong);
+  --color-destructive: var(--color-evidence-weak);
+  --color-border: var(--surface-hairline);
+  --color-input: var(--surface-border);
+  --color-ring: var(--surface-text-muted);
 
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-surface: var(--surface-surface);
+  --color-surface-raised: var(--surface-surface-raised);
+  --color-hairline: var(--surface-hairline);
+  --color-text-muted: var(--surface-text-muted);
+  --color-text-body: var(--surface-text-body);
+  --color-text-strong: var(--surface-text-strong);
 
-  /* Evidence grading — reserved semantics. */
   --color-evidence-strong: var(--evidence-strong);
   --color-evidence-mixed: var(--evidence-mixed);
   --color-evidence-mechanical: var(--evidence-mechanical);
   --color-evidence-weak: var(--evidence-weak);
 
-  /* Data visualization ramp. Ordered by emphasis, not rainbow. */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  /* Volume landmark scale — a real ordinal axis, so the ramp is ordinal. */
-  --color-landmark-below: var(--landmark-below);
-  --color-landmark-mev: var(--landmark-mev);
-  --color-landmark-mav: var(--landmark-mav);
-  --color-landmark-mrv: var(--landmark-mrv);
-  --color-landmark-over: var(--landmark-over);
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-}
-
-:root {
-  --radius: 0.375rem;
-
-  /* Light mode: journal offprint. Warm-neutral paper, not pure white. */
-  --background: oklch(0.982 0.003 250);
-  --foreground: oklch(0.22 0.015 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.015 250);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.015 250);
-  --primary: oklch(0.52 0.085 213);
-  --primary-foreground: oklch(0.99 0.002 250);
-  --secondary: oklch(0.95 0.005 250);
-  --secondary-foreground: oklch(0.3 0.018 250);
-  --muted: oklch(0.955 0.005 250);
-  --muted-foreground: oklch(0.48 0.02 250);
-  --accent: oklch(0.94 0.012 213);
-  --accent-foreground: oklch(0.3 0.03 213);
-  --destructive: oklch(0.55 0.19 27);
-  --border: oklch(0.9 0.008 250);
-  --input: oklch(0.9 0.008 250);
-  --ring: oklch(0.52 0.085 213);
-
-  --evidence-strong: oklch(0.52 0.13 152);
-  --evidence-mixed: oklch(0.62 0.12 72);
-  --evidence-mechanical: #2a78d6;
-  --evidence-weak: oklch(0.55 0.17 25);
-
-  /*
-    Chart series and volume-zone colours are validated, not chosen. Both sets
-    clear the six-check palette validator against this mode's surface —
-    lightness band, chroma floor, CVD separation under protanopia and
-    deuteranopia, normal-vision separation, and contrast. Do not hand-edit a
-    value here without re-running the validator for both modes.
-
-    Slots 3 and 4 sit below 3:1 on the light surface, which is permitted only
-    because every chart ships direct labels and a table view.
-  */
-  --chart-1: #2a78d6;
-  --chart-2: #eb6834;
-  --chart-3: #1baf7a;
-  --chart-4: #eda100;
-  --chart-5: #e87ba4;
-
-  /* Volume zones are a status scale: ordered, reserved, always icon + label. */
-  --landmark-below: #898781;
-  --landmark-mev: #0ca30c;
-  --landmark-mav: #fab219;
-  --landmark-mrv: #ec835a;
-  --landmark-over: #d03b3b;
-}
-
-.dark {
-  /* Dark mode is the primary target: gym lighting, one hand, high contrast. */
-  --background: oklch(0.165 0.012 250);
-  --foreground: oklch(0.93 0.008 250);
-  --card: oklch(0.205 0.015 250);
-  --card-foreground: oklch(0.93 0.008 250);
-  --popover: oklch(0.225 0.016 250);
-  --popover-foreground: oklch(0.93 0.008 250);
-  --primary: oklch(0.74 0.09 210);
-  --primary-foreground: oklch(0.17 0.02 210);
-  --secondary: oklch(0.26 0.018 250);
-  --secondary-foreground: oklch(0.93 0.008 250);
-  --muted: oklch(0.25 0.016 250);
-  --muted-foreground: oklch(0.7 0.022 250);
-  --accent: oklch(0.29 0.03 213);
-  --accent-foreground: oklch(0.9 0.03 213);
-  --destructive: oklch(0.66 0.17 25);
-  --border: oklch(0.32 0.022 250);
-  --input: oklch(0.34 0.024 250);
-  --ring: oklch(0.74 0.09 210);
-
-  --evidence-strong: oklch(0.72 0.14 152);
-  --evidence-mixed: oklch(0.79 0.12 78);
-  --evidence-mechanical: #3987e5;
-  --evidence-weak: oklch(0.68 0.16 25);
-
-  /* Dark steps are selected against the dark surface, not flipped from light. */
-  --chart-1: #3987e5;
-  --chart-2: #d95926;
-  --chart-3: #199e70;
-  --chart-4: #c98500;
-  --chart-5: #d55181;
-
-  --landmark-below: #898781;
-  --landmark-mev: #0ca30c;
-  --landmark-mav: #fab219;
-  --landmark-mrv: #ec835a;
-  --landmark-over: #d03b3b;
+  --radius: var(--radius-sm);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
 
   html {
@@ -167,19 +79,31 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-feature-settings: "cv05" 1, "ss01" 1;
+    background: var(--surface-background);
+    color: var(--surface-text-body);
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Numerals must be comparable down a column everywhere they appear. */
+  /*
+    Every number in the product uses tabular figures. Loads, reps, RIR,
+    volumes, percentages, dates — no exceptions. Columns of numbers that do not
+    align are the clearest signal that nobody was paying attention.
+  */
   .tabular,
-  [data-numeric] {
+  [data-numeric],
+  table td,
+  table th {
     font-variant-numeric: tabular-nums;
-    font-family: var(--font-mono);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--surface-text-muted);
+    outline-offset: 2px;
   }
 
   ::selection {
-    background: color-mix(in oklch, var(--primary) 30%, transparent);
+    background: var(--surface-surface-raised);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -196,33 +120,107 @@
 
 @layer components {
   /*
-    The eyebrow: mono, tracked out, small. Used for structural labels that
-    carry real information (section kind, evidence grade, units) — never
-    decoration.
+    The eyebrow: mono, tracked out, small. Structural labels that carry real
+    information — section kind, evidence grade, units. Never decoration.
   */
   .eyebrow {
-    @apply font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted-foreground;
+    font-family: var(--font-mono);
+    font-size: var(--text-ui-2xs);
+    line-height: var(--text-ui-2xs--line-height);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--surface-text-muted);
   }
 
   /*
-    Reading column for long-form concept prose. Serif, generous measure,
-    optical sizing on. This is essay content and should read like it.
+    The reading column. Serif, 68ch measure, 1.6 line height, optical sizing
+    on. This is essay content and should read like it.
   */
   .prose-concept {
-    @apply font-serif text-[1.0625rem] leading-[1.7] text-foreground/90;
-    max-width: 68ch;
+    font-family: var(--font-prose);
+    font-size: var(--text-prose-base);
+    line-height: var(--text-prose-base--line-height);
     font-optical-sizing: auto;
+    max-width: var(--prose-measure);
+    color: var(--surface-text-body);
   }
 
   .prose-concept p + p {
-    @apply mt-[1.15em];
+    margin-top: var(--spacing-4);
   }
 
   .prose-concept strong {
-    @apply font-semibold text-foreground;
+    font-weight: 600;
+    color: var(--surface-text-strong);
   }
 
   .prose-concept a {
-    @apply text-primary underline decoration-primary/35 underline-offset-[3px] transition-colors hover:decoration-primary;
+    color: var(--surface-text-strong);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--surface-border);
+    transition: text-decoration-color var(--duration-fast) var(--ease-out-quint);
+  }
+
+  .prose-concept a:hover {
+    text-decoration-color: var(--surface-text-strong);
+  }
+
+  /* Display headings. Serif, tight, set on the prose scale. */
+  .display-lg {
+    font-family: var(--font-prose);
+    font-size: var(--text-prose-4xl);
+    line-height: var(--text-prose-4xl--line-height);
+    letter-spacing: var(--tracking-tight);
+    font-weight: 600;
+    font-optical-sizing: auto;
+    color: var(--surface-text-strong);
+  }
+
+  .display-md {
+    font-family: var(--font-prose);
+    font-size: var(--text-prose-2xl);
+    line-height: var(--text-prose-2xl--line-height);
+    letter-spacing: var(--tracking-tight);
+    font-weight: 600;
+    font-optical-sizing: auto;
+    color: var(--surface-text-strong);
+  }
+
+  .display-sm {
+    font-family: var(--font-prose);
+    font-size: var(--text-prose-lg);
+    line-height: var(--text-prose-lg--line-height);
+    font-weight: 600;
+    font-optical-sizing: auto;
+    color: var(--surface-text-strong);
+  }
+
+  /* Inline reference marker. Baseline-lifted rather than true superscript. */
+  .citation-ref {
+    font-family: var(--font-mono);
+    font-size: 0.62em;
+    line-height: 1;
+    position: relative;
+    top: -0.15em;
+    margin-inline: 0.15em;
+    text-decoration: underline dotted;
+    text-underline-offset: 2px;
+  }
+
+  /*
+    Glossary terms inherit their type from the surrounding prose — a defined
+    term mid-sentence must not change size or leading, or the line breaks.
+  */
+  .glossary-term {
+    font: inherit;
+    line-height: inherit;
+    color: inherit;
+  }
+
+  /* Interactive targets never fall below the accessibility floor. */
+  .target {
+    min-height: var(--min-target);
+    min-width: var(--min-target);
   }
 }

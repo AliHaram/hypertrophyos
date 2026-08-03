@@ -14,7 +14,10 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:sync-content": "tsx --tsconfig tsconfig.json scripts/sync-content.ts"
+    "db:sync-content": "tsx --tsconfig tsconfig.json scripts/sync-content.ts",
+    "design:tokens": "node scripts/generate-tokens.mjs",
+    "design:tokens:check": "node scripts/generate-tokens.mjs --check",
+    "design:check": "node scripts/check-design-tokens.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

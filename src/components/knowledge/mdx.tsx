@@ -26,7 +26,7 @@ type El<T extends keyof React.JSX.IntrinsicElements> =
 const components = {
   h2: ({ children, ...props }: El<"h2">) => (
     <h2
-      className="mt-12 scroll-mt-24 border-t border-border pt-8 font-heading text-2xl font-semibold leading-tight text-foreground first:mt-0 first:border-0 first:pt-0"
+      className="mt-12 scroll-mt-24 border-t border-border pt-8 font-prose text-2xl font-semibold leading-tight text-foreground first:mt-0 first:border-0 first:pt-0"
       {...props}
     >
       {children}
@@ -34,20 +34,20 @@ const components = {
   ),
   h3: ({ children, ...props }: El<"h3">) => (
     <h3
-      className="mt-8 scroll-mt-24 font-heading text-lg font-semibold leading-snug text-foreground"
+      className="mt-8 scroll-mt-24 font-prose text-lg font-semibold leading-snug text-foreground"
       {...props}
     >
       {children}
     </h3>
   ),
   p: ({ children, ...props }: El<"p">) => (
-    <p className="prose-concept mt-[1.15em] first:mt-0" {...props}>
+    <p className="prose-concept mt-4 first:mt-0" {...props}>
       {children}
     </p>
   ),
   ul: ({ children, ...props }: El<"ul">) => (
     <ul
-      className="prose-concept mt-[1.15em] list-disc space-y-2 pl-6 marker:text-muted-foreground"
+      className="prose-concept mt-4 list-disc space-y-2 pl-6 marker:text-muted-foreground"
       {...props}
     >
       {children}
@@ -55,7 +55,7 @@ const components = {
   ),
   ol: ({ children, ...props }: El<"ol">) => (
     <ol
-      className="prose-concept mt-[1.15em] list-decimal space-y-2 pl-6 marker:font-mono marker:text-sm marker:text-muted-foreground"
+      className="prose-concept mt-4 list-decimal space-y-2 pl-6 marker:font-mono marker:text-sm marker:text-muted-foreground"
       {...props}
     >
       {children}
@@ -73,7 +73,7 @@ const components = {
   ),
   blockquote: ({ children, ...props }: El<"blockquote">) => (
     <blockquote
-      className="my-6 border-l-2 border-border pl-5 font-serif text-lg italic leading-relaxed text-muted-foreground"
+      className="my-6 border-l-2 border-border pl-5 font-prose text-lg italic leading-relaxed text-muted-foreground"
       {...props}
     >
       {children}
@@ -83,7 +83,7 @@ const components = {
     const isInternal = typeof href === "string" && href.startsWith("/");
     if (isInternal) {
       return (
-        <Link href={href} className="text-primary underline underline-offset-2">
+        <Link href={href} className="text-text-strong underline underline-offset-2">
           {children}
         </Link>
       );
@@ -93,7 +93,7 @@ const components = {
         href={href}
         target="_blank"
         rel="noreferrer"
-        className="text-primary underline underline-offset-2"
+        className="text-text-strong underline underline-offset-2"
         {...props}
       >
         {children}
@@ -109,7 +109,7 @@ const components = {
   ),
   th: ({ children, ...props }: El<"th">) => (
     <th
-      className="border-b border-border px-3 py-2 text-left font-mono text-[0.625rem] uppercase tracking-[0.1em] text-muted-foreground"
+      className="border-b border-border px-3 py-2 text-left font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground"
       {...props}
     >
       {children}

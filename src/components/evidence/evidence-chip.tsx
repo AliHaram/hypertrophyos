@@ -43,7 +43,7 @@ export function EvidenceChip({
       <TooltipTrigger
         className={cn(
           "inline-flex select-none items-center gap-1.5 rounded-full border border-border/80 bg-card px-2 py-0.5 align-middle",
-          "font-mono text-[0.625rem] uppercase tracking-[0.12em] text-muted-foreground",
+          "font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground",
           "cursor-help transition-colors hover:border-border hover:text-foreground",
           className,
         )}

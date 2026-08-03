@@ -21,7 +21,7 @@ export default function Home() {
     <main id="main" className="mx-auto max-w-5xl px-5 py-14 sm:px-8 sm:py-24">
       <p className="eyebrow">HypertrophyOS</p>
 
-      <h1 className="mt-4 max-w-3xl font-heading text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">
+      <h1 className="mt-4 max-w-3xl font-prose text-4xl font-semibold tracking-tight sm:text-6xl">
         A training system that tells you what to do today, and why it thinks so.
       </h1>
 
@@ -59,14 +59,14 @@ export default function Home() {
       <div className="mt-10 flex flex-wrap items-center gap-4">
         <Link
           href="/knowledge"
-          className="inline-flex min-h-11 items-center gap-2 rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          className="inline-flex min-h-11 items-center gap-2 rounded-md bg-text-strong px-5 text-sm font-medium text-text-strong-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted"
         >
           Read the knowledge layer
           <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
         <Link
           href="/knowledge/citations"
-          className="inline-flex min-h-11 items-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground"
+          className="inline-flex min-h-11 items-center font-mono text-xs uppercase tracking-eyebrow text-muted-foreground transition-colors hover:text-foreground"
         >
           {ALL_CITATIONS.length} references
         </Link>
@@ -98,7 +98,7 @@ export default function Home() {
             <li key={concept.slug}>
               <Link
                 href={`/knowledge/${concept.slug}`}
-                className="inline-flex items-center gap-2 text-sm text-foreground/85 transition-colors hover:text-primary"
+                className="inline-flex items-center gap-2 text-sm text-foreground/85 transition-colors hover:text-text-strong"
               >
                 <EvidenceChip grade={concept.evidenceGrade} showLabel={false} />
                 {concept.title}
@@ -125,8 +125,8 @@ function Positioning({
       <h3
         className={
           emphasised
-            ? "font-heading text-base font-semibold text-primary"
-            : "font-heading text-base font-semibold text-muted-foreground"
+            ? "font-prose text-base font-semibold text-text-strong"
+            : "font-prose text-base font-semibold text-muted-foreground"
         }
       >
         {title}

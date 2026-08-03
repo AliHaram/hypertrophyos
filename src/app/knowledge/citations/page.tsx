@@ -27,7 +27,7 @@ export default function CitationsPage() {
       </Link>
 
       <header className="mt-6 border-b border-border pb-8">
-        <h1 className="font-heading text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">
+        <h1 className="font-prose text-4xl font-semibold tracking-tight sm:text-5xl">
           Bibliography
         </h1>
         <p className="prose-concept mt-4 text-lg text-muted-foreground">
@@ -36,7 +36,7 @@ export default function CitationsPage() {
           has no citation, that is deliberate, and the claim is graded
           accordingly rather than propped up by an invented reference.
         </p>
-        <p className="mt-4 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+        <p className="mt-4 font-mono text-xs uppercase tracking-eyebrow text-muted-foreground">
           {sorted.length} references
         </p>
       </header>
@@ -52,13 +52,13 @@ export default function CitationsPage() {
               className="border-b border-border/60 pb-8 last:border-0"
             >
               <p className="eyebrow">{citation.design.replace(/-/g, " ")}</p>
-              <h2 className="mt-2 font-heading text-lg font-semibold leading-snug">
+              <h2 className="mt-2 font-prose text-lg font-semibold leading-snug">
                 {url ? (
                   <a
                     href={url}
                     target="_blank"
                     rel="noreferrer"
-                    className="transition-colors hover:text-primary"
+                    className="transition-colors hover:text-text-strong"
                   >
                     {citation.title}
                   </a>
@@ -69,7 +69,7 @@ export default function CitationsPage() {
               <p className="mt-1.5 text-sm text-muted-foreground">
                 {citation.authors} ({citation.year}) · {citation.journal}
               </p>
-              <p className="mt-3 max-w-3xl border-l-2 border-border pl-4 font-serif text-[0.9375rem] leading-relaxed text-foreground/85">
+              <p className="mt-3 max-w-3xl border-l-2 border-border pl-4 font-prose text-prose-sm leading-relaxed text-foreground/85">
                 {citation.keyFinding}
               </p>
 
@@ -79,20 +79,20 @@ export default function CitationsPage() {
                     href={url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 font-mono text-[0.6875rem] text-primary hover:underline"
+                    className="inline-flex items-center gap-1.5 font-mono text-ui-2xs text-text-strong hover:underline"
                   >
                     <ExternalLink className="size-3" aria-hidden="true" />
                     {citation.doi ? `doi:${citation.doi}` : `PMID ${citation.pmid}`}
                   </a>
                 )}
                 {citing.length > 0 && (
-                  <p className="flex flex-wrap items-center gap-x-2 font-mono text-[0.6875rem] text-muted-foreground">
+                  <p className="flex flex-wrap items-center gap-x-2 font-mono text-ui-2xs text-muted-foreground">
                     <span>Cited in</span>
                     {citing.map((concept, index) => (
                       <span key={concept.slug}>
                         <Link
                           href={`/knowledge/${concept.slug}`}
-                          className="text-foreground/80 hover:text-primary hover:underline"
+                          className="text-foreground/80 hover:text-text-strong hover:underline"
                         >
                           {concept.title}
                         </Link>

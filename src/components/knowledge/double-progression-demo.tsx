@@ -49,8 +49,8 @@ export function DoubleProgressionDemo() {
   });
 
   return (
-    <div className="my-8 rounded-lg border border-border bg-card/50 p-4 sm:p-5">
-      <h3 className="font-heading text-base font-semibold leading-tight">
+    <div className="my-8 rounded-md border border-border bg-card/50 p-4 sm:p-5">
+      <h3 className="font-prose text-base font-semibold leading-tight">
         Double progression, worked
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">

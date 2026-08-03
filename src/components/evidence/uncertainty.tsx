@@ -31,7 +31,7 @@ export function Uncertainty({
       <h3 id="uncertainty-heading" className="eyebrow mb-2.5">
         {title}
       </h3>
-      <div className="font-sans text-sm leading-relaxed text-muted-foreground [&_a]:text-primary [&_a]:underline [&_p+p]:mt-3">
+      <div className="font-sans text-sm leading-relaxed text-muted-foreground [&_a]:text-text-strong [&_a]:underline [&_p+p]:mt-3">
         {children}
       </div>
     </aside>

@@ -42,7 +42,7 @@ export default function KnowledgeIndex() {
     <main id="main" className="mx-auto max-w-4xl px-5 py-10 sm:px-8 sm:py-16">
       <header className="border-b border-border pb-8">
         <p className="eyebrow">The knowledge layer</p>
-        <h1 className="mt-2 font-heading text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">
+        <h1 className="mt-2 font-prose text-4xl font-semibold tracking-tight sm:text-5xl">
           What makes a muscle grow
         </h1>
         <p className="prose-concept mt-4 text-lg text-muted-foreground">
@@ -63,7 +63,7 @@ export default function KnowledgeIndex() {
 
           return (
             <section key={category}>
-              <h2 className="font-heading text-2xl font-semibold leading-tight">
+              <h2 className="font-prose text-2xl font-semibold leading-tight">
                 {CATEGORY_META[category].label}
               </h2>
               <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -76,11 +76,11 @@ export default function KnowledgeIndex() {
                     <li key={concept.slug}>
                       <Link
                         href={`/knowledge/${concept.slug}`}
-                        className="group flex gap-4 py-5 transition-colors hover:bg-muted/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring sm:gap-6"
+                        className="group flex gap-4 py-5 transition-colors hover:bg-muted/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-text-muted sm:gap-6"
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                            <h3 className="font-heading text-lg font-semibold leading-snug transition-colors group-hover:text-primary">
+                            <h3 className="font-prose text-lg font-semibold leading-snug transition-colors group-hover:text-text-strong">
                               {concept.title}
                             </h3>
                             <EvidenceChip grade={concept.evidenceGrade} />
@@ -89,7 +89,7 @@ export default function KnowledgeIndex() {
                             {concept.shortDefinition}
                           </p>
                         </div>
-                        <span className="shrink-0 pt-1 font-mono text-[0.6875rem] tabular-nums text-muted-foreground">
+                        <span className="shrink-0 pt-1 font-mono text-ui-2xs tabular-nums text-muted-foreground">
                           {concept.readingMinutes} min
                         </span>
                       </Link>
@@ -121,7 +121,7 @@ export default function KnowledgeIndex() {
       <footer className="mt-16 border-t border-border pt-8">
         <Link
           href="/knowledge/citations"
-          className="font-mono text-xs uppercase tracking-[0.12em] text-primary hover:underline"
+          className="font-mono text-xs uppercase tracking-eyebrow text-text-strong hover:underline"
         >
           Bibliography →
         </Link>

@@ -46,8 +46,8 @@ export function Term({
         delay={150}
         closeDelay={100}
         className={cn(
-          "cursor-help border-b border-dotted border-muted-foreground/60 bg-transparent p-0 text-left font-[inherit] text-[inherit] leading-[inherit]",
-          "hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+          "glossary-term cursor-help border-b border-dotted border-muted-foreground/60 bg-transparent p-0 text-left",
+          "hover:border-text-muted hover:text-text-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted",
           className,
         )}
         aria-label={`${key}: show definition`}
@@ -56,7 +56,7 @@ export function Term({
       </HoverCardTrigger>
       <HoverCardContent side="top" className="w-80 font-sans">
         <div className="flex items-start justify-between gap-3">
-          <p className="font-heading text-base font-semibold leading-tight">
+          <p className="font-prose text-base font-semibold leading-tight">
             {entry.title}
           </p>
           <EvidenceChip grade={entry.evidenceGrade} showLabel={false} />
@@ -66,7 +66,7 @@ export function Term({
         </p>
         <Link
           href={`/knowledge/${entry.slug}`}
-          className="mt-3 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-primary hover:underline"
+          className="mt-3 inline-block font-mono text-ui-2xs uppercase tracking-eyebrow text-text-strong hover:underline"
         >
           Read the concept →
         </Link>

@@ -37,13 +37,13 @@ export function ChartFigure({
   return (
     <figure
       className={cn(
-        "my-8 rounded-lg border border-border bg-card/50 p-4 sm:p-5",
+        "my-8 rounded-md border border-border bg-card/50 p-4 sm:p-5",
         className,
       )}
     >
       <figcaption className="mb-4 flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h3 className="font-heading text-base font-semibold leading-tight text-foreground">
+          <h3 className="font-prose text-base font-semibold leading-tight text-foreground">
             {title}
           </h3>
           {subtitle && (
@@ -59,9 +59,9 @@ export function ChartFigure({
           aria-controls={tableId}
           className={cn(
             "flex shrink-0 items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5",
-            "font-mono text-[0.625rem] uppercase tracking-[0.1em] text-muted-foreground",
-            "transition-colors hover:border-primary/60 hover:text-foreground",
-            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+            "font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground",
+            "transition-colors hover:border-text-muted hover:text-foreground",
+            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted",
           )}
         >
           <Table2 className="size-3" aria-hidden="true" />
@@ -78,7 +78,7 @@ export function ChartFigure({
                   <th
                     key={column}
                     scope="col"
-                    className="px-2 py-2 text-left font-mono text-[0.625rem] uppercase tracking-[0.1em] text-muted-foreground"
+                    className="px-2 py-2 text-left font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground"
                   >
                     {column}
                   </th>
@@ -91,7 +91,7 @@ export function ChartFigure({
                   {row.map((cell, cellIndex) => (
                     <td
                       key={cellIndex}
-                      className="px-2 py-1.5 font-mono text-[0.8125rem] tabular-nums text-foreground/85"
+                      className="px-2 py-1.5 font-mono text-ui-sm tabular-nums text-foreground/85"
                     >
                       {cell}
                     </td>

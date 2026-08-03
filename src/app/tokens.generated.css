@@ -1,0 +1,173 @@
+/*
+ * GENERATED FILE — do not edit.
+ *
+ * Source: src/lib/design/tokens.ts
+ * Regenerate: pnpm design:tokens
+ */
+
+@theme {
+  /* Neutral ramp — all chrome draws from here. */
+  --color-neutral-00: #0b0a08;
+  --color-neutral-01: #171614;
+  --color-neutral-02: #262421;
+  --color-neutral-03: #373531;
+  --color-neutral-04: #4d4a46;
+  --color-neutral-05: #66635e;
+  --color-neutral-06: #807d78;
+  --color-neutral-07: #9a9893;
+  --color-neutral-08: #b6b4b0;
+  --color-neutral-09: #d3d1cd;
+  --color-neutral-10: #e9e7e5;
+  --color-neutral-11: #f8f6f4;
+
+  /* Semantic colour — the only place hue is permitted. */
+  --color-evidence-strong: #56bd78;
+  --color-evidence-mixed: #e5b15b;
+  --color-evidence-mechanical: #3987e5;
+  --color-evidence-weak: #ea6a64;
+  --color-landmark-below: #898781;
+  --color-landmark-mev: #0ca30c;
+  --color-landmark-mav: #fab219;
+  --color-landmark-mrv: #ec835a;
+  --color-landmark-over: #d03b3b;
+  --color-chart-1: #3987e5;
+  --color-chart-2: #d95926;
+  --color-chart-3: #199e70;
+  --color-chart-4: #c98500;
+  --color-chart-5: #d55181;
+
+  /* Typography. */
+  --font-prose: var(--font-newsreader);
+  --font-ui: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+  --font-sans: var(--font-plex-sans);
+  --text-prose-xs: 0.875rem;
+  --text-prose-xs--line-height: 1.25rem;
+  --text-prose-sm: 0.9375rem;
+  --text-prose-sm--line-height: 1.5rem;
+  --text-prose-base: 1.0625rem;
+  --text-prose-base--line-height: 1.75rem;
+  --text-prose-lg: 1.25rem;
+  --text-prose-lg--line-height: 2rem;
+  --text-prose-xl: 1.5rem;
+  --text-prose-xl--line-height: 2rem;
+  --text-prose-2xl: 1.875rem;
+  --text-prose-2xl--line-height: 2.5rem;
+  --text-prose-3xl: 2.25rem;
+  --text-prose-3xl--line-height: 2.75rem;
+  --text-prose-4xl: 2.75rem;
+  --text-prose-4xl--line-height: 3.25rem;
+  --text-ui-2xs: 0.6875rem;
+  --text-ui-2xs--line-height: 1rem;
+  --text-ui-xs: 0.75rem;
+  --text-ui-xs--line-height: 1rem;
+  --text-ui-sm: 0.8125rem;
+  --text-ui-sm--line-height: 1.25rem;
+  --text-ui-base: 0.875rem;
+  --text-ui-base--line-height: 1.25rem;
+  --text-ui-md: 1rem;
+  --text-ui-md--line-height: 1.5rem;
+  --text-ui-lg: 1.125rem;
+  --text-ui-lg--line-height: 1.5rem;
+  --text-ui-xl: 1.25rem;
+  --text-ui-xl--line-height: 1.75rem;
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0em;
+  --tracking-eyebrow: 0.12em;
+
+  /* 4px grid. */
+  --spacing-0: 0px;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+
+  /* Radii stay small — 4px ceiling on containers. */
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-full: 9999px;
+
+  /* Motion: short, flat, two properties. */
+  --duration-fast: 120ms;
+  --duration-base: 150ms;
+  --duration-slow: 180ms;
+  --ease-out-quint: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Shadows exist only on true overlays. */
+  --shadow-overlay: 0 4px 12px rgb(0 0 0 / 0.28), 0 1px 2px rgb(0 0 0 / 0.2);
+}
+
+/* Surface roles. Switched by [data-surface] on the route shell. */
+:root, [data-surface="dark"] {
+  --surface-background: #0b0a08;
+  --surface-surface: #171614;
+  --surface-surface-raised: #262421;
+  --surface-hairline: #262421;
+  --surface-border: #373531;
+  --surface-text-muted: #9a9893;
+  --surface-text-body: #d3d1cd;
+  --surface-text-strong: #f8f6f4;
+  --evidence-strong: #56bd78;
+  --evidence-mixed: #e5b15b;
+  --evidence-mechanical: #3987e5;
+  --evidence-weak: #ea6a64;
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-5: #d55181;
+}
+
+[data-surface="light"] {
+  --surface-background: #f8f6f4;
+  --surface-surface: #f8f6f4;
+  --surface-surface-raised: #e9e7e5;
+  --surface-hairline: #d3d1cd;
+  --surface-border: #b6b4b0;
+  --surface-text-muted: #66635e;
+  --surface-text-body: #171614;
+  --surface-text-strong: #0b0a08;
+  --evidence-strong: #137d41;
+  --evidence-mixed: #b27923;
+  --evidence-mechanical: #2a78d6;
+  --evidence-weak: #c13c3b;
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+}
+
+/* Density tiers, applied via [data-density]. */
+[data-density="comfortable"] {
+  --density-row-height: 3rem;
+  --density-padding-x: 1.25rem;
+  --density-padding-y: 0.75rem;
+  --density-font-size: 0.875rem;
+}
+[data-density="compact"] {
+  --density-row-height: 2.25rem;
+  --density-padding-x: 0.75rem;
+  --density-padding-y: 0.5rem;
+  --density-font-size: 0.8125rem;
+}
+[data-density="condensed"] {
+  --density-row-height: 3.5rem;
+  --density-padding-x: 1rem;
+  --density-padding-y: 0.75rem;
+  --density-font-size: 1rem;
+}
+
+:root {
+  --prose-measure: 68ch;
+  --min-target: 2.75rem;
+}

@@ -59,7 +59,7 @@ export default async function ConceptPage({
 
       <header className="mt-6 border-b border-border pb-8">
         <p className="eyebrow">{CATEGORY_META[concept.category].label}</p>
-        <h1 className="mt-2 font-heading text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">
+        <h1 className="mt-2 font-prose text-4xl font-semibold tracking-tight sm:text-5xl">
           {concept.title}
         </h1>
         <p className="prose-concept mt-4 text-lg text-muted-foreground">
@@ -67,7 +67,7 @@ export default async function ConceptPage({
         </p>
         <div className="mt-5 flex flex-wrap items-center gap-3">
           <EvidenceChip grade={concept.evidenceGrade} />
-          <span className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-muted-foreground">
+          <span className="font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground">
             {concept.readingMinutes} min read
           </span>
         </div>
@@ -93,7 +93,7 @@ export default async function ConceptPage({
                         href={url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-foreground/85 transition-colors hover:text-primary"
+                        className="text-foreground/85 transition-colors hover:text-text-strong"
                       >
                         <span className="font-medium">
                           {citation.authors} ({citation.year})
@@ -108,7 +108,7 @@ export default async function ConceptPage({
               </ol>
               <Link
                 href="/knowledge/citations"
-                className="mt-4 inline-block font-mono text-[0.625rem] uppercase tracking-[0.12em] text-primary hover:underline"
+                className="mt-4 inline-block font-mono text-ui-2xs uppercase tracking-eyebrow text-text-strong hover:underline"
               >
                 Full bibliography →
               </Link>
@@ -123,7 +123,7 @@ export default async function ConceptPage({
                   <li key={candidate.slug}>
                     <Link
                       href={`/knowledge/${candidate.slug}`}
-                      className="group flex items-start gap-2 text-sm transition-colors hover:text-primary"
+                      className="group flex items-start gap-2 text-sm transition-colors hover:text-text-strong"
                     >
                       <EvidenceChip
                         grade={candidate.evidenceGrade}
