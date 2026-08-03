@@ -1,0 +1,213 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  HypertrophyOS design tokens.
+
+  Direction: laboratory instrumentation, not gym app. Deep blue-slate ground,
+  a single cool cyan for interactive/brand, and three reserved semantic hues
+  that belong exclusively to the evidence-grading system. Nothing else in the
+  interface is allowed to use evidence green/amber/red — if it is that color,
+  it is making a claim about evidence strength.
+*/
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-archivo);
+  --font-serif: var(--font-newsreader);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-heading: var(--font-newsreader);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Evidence grading — reserved semantics. */
+  --color-evidence-strong: var(--evidence-strong);
+  --color-evidence-mixed: var(--evidence-mixed);
+  --color-evidence-weak: var(--evidence-weak);
+
+  /* Data visualization ramp. Ordered by emphasis, not rainbow. */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Volume landmark scale — a real ordinal axis, so the ramp is ordinal. */
+  --color-landmark-below: var(--landmark-below);
+  --color-landmark-mev: var(--landmark-mev);
+  --color-landmark-mav: var(--landmark-mav);
+  --color-landmark-mrv: var(--landmark-mrv);
+  --color-landmark-over: var(--landmark-over);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.375rem;
+
+  /* Light mode: journal offprint. Warm-neutral paper, not pure white. */
+  --background: oklch(0.982 0.003 250);
+  --foreground: oklch(0.22 0.015 250);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.015 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.015 250);
+  --primary: oklch(0.52 0.085 213);
+  --primary-foreground: oklch(0.99 0.002 250);
+  --secondary: oklch(0.95 0.005 250);
+  --secondary-foreground: oklch(0.3 0.018 250);
+  --muted: oklch(0.955 0.005 250);
+  --muted-foreground: oklch(0.48 0.02 250);
+  --accent: oklch(0.94 0.012 213);
+  --accent-foreground: oklch(0.3 0.03 213);
+  --destructive: oklch(0.55 0.19 27);
+  --border: oklch(0.9 0.008 250);
+  --input: oklch(0.9 0.008 250);
+  --ring: oklch(0.52 0.085 213);
+
+  --evidence-strong: oklch(0.52 0.13 152);
+  --evidence-mixed: oklch(0.62 0.12 72);
+  --evidence-weak: oklch(0.55 0.17 25);
+
+  --chart-1: oklch(0.52 0.085 213);
+  --chart-2: oklch(0.58 0.1 265);
+  --chart-3: oklch(0.62 0.12 72);
+  --chart-4: oklch(0.52 0.13 152);
+  --chart-5: oklch(0.55 0.11 320);
+
+  --landmark-below: oklch(0.6 0.02 250);
+  --landmark-mev: oklch(0.55 0.1 213);
+  --landmark-mav: oklch(0.52 0.13 152);
+  --landmark-mrv: oklch(0.62 0.12 72);
+  --landmark-over: oklch(0.55 0.17 25);
+}
+
+.dark {
+  /* Dark mode is the primary target: gym lighting, one hand, high contrast. */
+  --background: oklch(0.165 0.012 250);
+  --foreground: oklch(0.93 0.008 250);
+  --card: oklch(0.205 0.015 250);
+  --card-foreground: oklch(0.93 0.008 250);
+  --popover: oklch(0.225 0.016 250);
+  --popover-foreground: oklch(0.93 0.008 250);
+  --primary: oklch(0.74 0.09 210);
+  --primary-foreground: oklch(0.17 0.02 210);
+  --secondary: oklch(0.26 0.018 250);
+  --secondary-foreground: oklch(0.93 0.008 250);
+  --muted: oklch(0.25 0.016 250);
+  --muted-foreground: oklch(0.7 0.022 250);
+  --accent: oklch(0.29 0.03 213);
+  --accent-foreground: oklch(0.9 0.03 213);
+  --destructive: oklch(0.66 0.17 25);
+  --border: oklch(0.32 0.022 250);
+  --input: oklch(0.34 0.024 250);
+  --ring: oklch(0.74 0.09 210);
+
+  --evidence-strong: oklch(0.72 0.14 152);
+  --evidence-mixed: oklch(0.79 0.12 78);
+  --evidence-weak: oklch(0.68 0.16 25);
+
+  --chart-1: oklch(0.74 0.09 210);
+  --chart-2: oklch(0.7 0.11 265);
+  --chart-3: oklch(0.79 0.12 78);
+  --chart-4: oklch(0.72 0.14 152);
+  --chart-5: oklch(0.72 0.12 320);
+
+  --landmark-below: oklch(0.55 0.02 250);
+  --landmark-mev: oklch(0.7 0.09 213);
+  --landmark-mav: oklch(0.72 0.14 152);
+  --landmark-mrv: oklch(0.79 0.12 78);
+  --landmark-over: oklch(0.68 0.16 25);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv05" 1, "ss01" 1;
+  }
+
+  /* Numerals must be comparable down a column everywhere they appear. */
+  .tabular,
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-mono);
+  }
+
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 30%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /*
+    The eyebrow: mono, tracked out, small. Used for structural labels that
+    carry real information (section kind, evidence grade, units) — never
+    decoration.
+  */
+  .eyebrow {
+    @apply font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted-foreground;
+  }
+
+  /*
+    Reading column for long-form concept prose. Serif, generous measure,
+    optical sizing on. This is essay content and should read like it.
+  */
+  .prose-concept {
+    @apply font-serif text-[1.0625rem] leading-[1.7] text-foreground/90;
+    max-width: 68ch;
+    font-optical-sizing: auto;
+  }
+
+  .prose-concept p + p {
+    @apply mt-[1.15em];
+  }
+
+  .prose-concept strong {
+    @apply font-semibold text-foreground;
+  }
+
+  .prose-concept a {
+    @apply text-primary underline decoration-primary/35 underline-offset-[3px] transition-colors hover:decoration-primary;
+  }
+}
