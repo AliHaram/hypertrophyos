@@ -97,21 +97,23 @@ export const exercises = pgTable(
   ],
 );
 
-export const involvementRoleEnum = pgEnum("involvement_role", [
-  "prime",
-  "synergist",
-  "stabilizer",
+/**
+ * Pelland et al. (2026) coded involvement in three tiers. We store the tier,
+ * never the multiplier — see docs/adr/0002-fractional-set-coding.md.
+ */
+export const involvementEnum = pgEnum("involvement", [
+  "direct",
+  "fractional",
+  "indirect",
 ]);
 
 /**
  * Fractional volume counting.
  *
- * `involvement` is the multiplier applied when a set of this exercise is
- * counted toward this muscle's weekly volume. Defaults follow the roles —
- * prime 1.0, synergist 0.5, stabilizer 0.0 — but the column is explicit so
- * individual pairs can deviate where the default is wrong. Pelland et al.
- * (2026) found this fractional scheme predicted adaptation better than
- * counting indirect work fully or ignoring it.
+ * `involvement` is the tier, and the multiplier (1.0 / 0.5 / 0.0) is derived
+ * in `lib/training/involvement.ts`. Storing the multiplier would reintroduce
+ * exactly the per-exercise fudging the tiers exist to prevent: a stored float
+ * can hold 0.35, and nothing in the literature supports 0.35.
  */
 export const exerciseMuscles = pgTable(
   "exercise_muscles",
@@ -122,10 +124,9 @@ export const exerciseMuscles = pgTable(
     muscleId: text("muscle_id")
       .notNull()
       .references(() => muscles.id, { onDelete: "cascade" }),
-    role: involvementRoleEnum("role").notNull(),
-    involvement: numeric("involvement", { precision: 3, scale: 2 }).notNull(),
-    /** Why this pair deviates from the role default, when it does. */
-    weightingNote: text("weighting_note"),
+    involvement: involvementEnum("involvement").notNull(),
+    /** Why this pair is coded as it is, where the coding is arguable. */
+    codingNote: text("coding_note"),
   },
   (table) => [
     uniqueIndex("exercise_muscles_pk").on(table.exerciseId, table.muscleId),

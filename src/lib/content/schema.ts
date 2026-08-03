@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+import {
+  type IntegrityViolation,
+  checkCitationsResolve,
+  checkGradedSubject,
+} from "@/lib/evidence/integrity";
 import { evidenceGradeSchema } from "@/lib/evidence/types";
 
 /**
@@ -82,6 +87,12 @@ export const conceptFrontmatterSchema = z.object({
    * practice for anything graded `mixed` — see `assertIntegrity`.
    */
   uncertainty: z.string().min(20).optional(),
+  /**
+   * The mechanical basis a `mechanical-inference` claim rests on — moment
+   * arms, resistance vector, line of action. Required for that grade and
+   * enforced by the integrity checker.
+   */
+  derivation: z.string().min(20).optional(),
   /** Slugs of concepts worth reading next. */
   related: z.array(z.string().min(1)).default([]),
 });
@@ -96,32 +107,23 @@ export interface Concept extends ConceptFrontmatter {
 }
 
 /**
- * Editorial rules that the type system cannot express.
+ * Per-concept integrity rules, delegated to the shared checker.
  *
- * These are the evidence-integrity requirements as executable checks. A
- * contested claim that does not say where it might be wrong, or a strong grade
- * with nothing behind it, is a build failure.
+ * The rule bodies live in `lib/evidence/integrity.ts` so concepts and
+ * exercises are held to the same standard by the same code — a claim about a
+ * preacher curl and a claim about protein synthesis are both claims.
  */
-export function assertIntegrity(concept: Concept): void {
-  const problems: string[] = [];
-
-  if (concept.evidenceGrade === "strong" && concept.citations.length === 0) {
-    problems.push(
-      'graded "strong" but cites nothing — either cite the meta-analyses or downgrade to "mixed"',
-    );
-  }
-
-  if (concept.evidenceGrade === "mixed" && !concept.uncertainty) {
-    problems.push(
-      'graded "mixed" but has no `uncertainty` note — say what would change your mind',
-    );
-  }
-
-  if (problems.length > 0) {
-    throw new Error(
-      `Evidence integrity check failed for "${concept.slug}":\n  - ${problems.join("\n  - ")}`,
-    );
-  }
+export function conceptViolations(concept: Concept): IntegrityViolation[] {
+  return [
+    ...checkGradedSubject({
+      id: concept.slug,
+      grade: concept.evidenceGrade,
+      citations: concept.citations,
+      uncertainty: concept.uncertainty,
+      derivation: concept.derivation,
+    }),
+    ...checkCitationsResolve(concept.slug, concept.citations),
+  ];
 }
 
 /** ~200 wpm, rounded up. Prose here is dense, so this runs deliberately slow. */

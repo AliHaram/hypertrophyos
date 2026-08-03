@@ -5,10 +5,10 @@
  * Two ideas do the work here.
  *
  * 1. Fractional counting. A set of bench press is not one set of chest and one
- *    set of triceps. Pelland et al. (2026) found that weighting indirect
- *    involvement at 0.5 predicted adaptation better than counting it as either
- *    1.0 or 0.0, so involvement weights are stored per exercise-muscle pair
- *    rather than assumed.
+ *    set of triceps. Pelland et al. (2026) found that coding involvement in
+ *    three tiers — direct, fractional, indirect — predicted adaptation better
+ *    than counting indirect work fully or ignoring it. The tier is stored per
+ *    exercise-muscle pair; the multiplier is derived, never stored.
  *
  * 2. Effective sets. A set taken 6 reps shy of failure recruits far fewer
  *    high-threshold motor units than one taken near failure, and counting it
@@ -17,20 +17,20 @@
  *    reported separately so the user can see what was discarded and why.
  */
 
-/** Involvement of a muscle in an exercise, used as the set multiplier. */
-export const INVOLVEMENT_WEIGHTS = {
-  /** The muscle the exercise is chosen to train. */
-  prime: 1,
-  /** Meaningfully loaded through a useful range, but not the target. */
-  synergist: 0.5,
-  /**
-   * Loaded largely isometrically, or through a range too short to drive much
-   * growth. Counted at zero for volume purposes, still recorded for fatigue.
-   */
-  stabilizer: 0,
-} as const;
+/**
+ * Involvement of a muscle in an exercise.
+ *
+ * Re-exported from ./involvement so callers have one import for the volume
+ * maths. The tiers and their multipliers live there because the coding scheme
+ * is a citable decision, not an implementation detail of the tally.
+ */
+import { type Involvement, involvementMultiplier } from "./involvement";
 
-export type InvolvementRole = keyof typeof INVOLVEMENT_WEIGHTS;
+export {
+  type Involvement,
+  INVOLVEMENT_META,
+  involvementMultiplier,
+} from "./involvement";
 
 /**
  * Corrected RIR above which a set stops contributing meaningfully to the
@@ -47,8 +47,8 @@ export const JUNK_VOLUME_RIR_THRESHOLD = 4;
 export interface LoggedSet {
   /** Muscle the set is being counted toward. */
   muscleId: string;
-  /** Involvement weight for this exercise-muscle pair, 0–1. */
-  involvement: number;
+  /** Involvement tier for this exercise-muscle pair. */
+  involvement: Involvement;
   /**
    * RIR after correcting for the user's measured estimation bias. Null when
    * the user has not logged an RIR and no bias correction is possible.
@@ -88,7 +88,7 @@ export function tallyVolume(sets: readonly LoggedSet[]): VolumeTally {
   return sets.reduce<VolumeTally>((tally, set) => {
     if (!set.completed) return tally;
 
-    const weight = clampInvolvement(set.involvement);
+    const weight = involvementMultiplier(set.involvement);
     if (weight === 0) return tally;
 
     const isJunk =
@@ -203,11 +203,6 @@ export const LANDMARK_UNCERTAINTY: Record<
   mav: { low: 10, high: 20 },
   mrv: { low: 12, high: 25 },
 };
-
-function clampInvolvement(value: number): number {
-  if (Number.isNaN(value)) return 0;
-  return Math.min(1, Math.max(0, value));
-}
 
 function assertOrderedLandmarks(landmarks: VolumeLandmarks): void {
   const { mev, mav, mrv } = landmarks;

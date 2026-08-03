@@ -20,6 +20,10 @@ import {
 const DOT_COLOR: Record<EvidenceGrade, string> = {
   strong: "bg-evidence-strong",
   mixed: "bg-evidence-mixed",
+  // Blue, from the Phase 1 validated palette. Deliberately not a fourth hue
+  // invented for the purpose, and deliberately not adjacent to amber — the
+  // grade it is most often confused with.
+  "mechanical-inference": "bg-evidence-mechanical",
   weak: "bg-evidence-weak",
 };
 

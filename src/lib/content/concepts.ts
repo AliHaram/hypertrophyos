@@ -6,14 +6,19 @@ import path from "node:path";
 import matter from "gray-matter";
 
 import { resolveCitations } from "@/lib/evidence/citations";
+import {
+  assertNoViolations,
+  checkOrphanedTerms,
+  checkTermUniqueness,
+} from "@/lib/evidence/integrity";
 import type { Citation } from "@/lib/evidence/types";
 
 import {
   CONCEPT_CATEGORIES,
   type Concept,
   type ConceptCategory,
-  assertIntegrity,
   conceptFrontmatterSchema,
+  conceptViolations,
   estimateReadingMinutes,
 } from "./schema";
 
@@ -41,11 +46,37 @@ export function getAllConcepts(): Concept[] {
     .filter((file) => file.endsWith(".mdx"))
     .map((file) => parseConcept(file));
 
-  assertUniqueTerms(concepts);
+  runIntegrityChecks(concepts);
   assertRelatedResolve(concepts);
 
   cache = concepts.sort(compareConcepts);
   return cache;
+}
+
+/**
+ * Runs the whole rule set over the corpus and fails once with every violation.
+ *
+ * Collecting rather than throwing on the first problem matters in practice: a
+ * content pass that introduces six violations should surface six, not send the
+ * author round the build loop six times.
+ */
+function runIntegrityChecks(concepts: Concept[]): void {
+  const resolvedTerms = new Set(
+    concepts.flatMap((concept) =>
+      [concept.title, ...concept.terms].map((term) => term.toLowerCase()),
+    ),
+  );
+
+  assertNoViolations([
+    ...concepts.flatMap(conceptViolations),
+    ...checkTermUniqueness(
+      concepts.map((concept) => ({
+        slug: concept.slug,
+        terms: [concept.title, ...concept.terms],
+      })),
+    ),
+    ...checkOrphanedTerms(resolvedTerms),
+  ]);
 }
 
 function parseConcept(filename: string): Concept {
@@ -60,9 +91,6 @@ function parseConcept(filename: string): Concept {
     );
   }
 
-  // Throws on unknown or unverified ids.
-  resolveCitations(parsed.data.citations);
-
   const concept: Concept = {
     ...parsed.data,
     slug,
@@ -70,7 +98,6 @@ function parseConcept(filename: string): Concept {
     readingMinutes: estimateReadingMinutes(content),
   };
 
-  assertIntegrity(concept);
   return concept;
 }
 
@@ -79,27 +106,6 @@ function compareConcepts(a: Concept, b: Concept): number {
     CONCEPT_CATEGORIES.indexOf(a.category) -
     CONCEPT_CATEGORIES.indexOf(b.category);
   return categoryDelta !== 0 ? categoryDelta : a.position - b.position;
-}
-
-/**
- * A term may only resolve to one concept. Two definitions for "MEV" would make
- * the glossary non-deterministic, and the reader would never know which they
- * were getting.
- */
-function assertUniqueTerms(concepts: Concept[]): void {
-  const owners = new Map<string, string>();
-  for (const concept of concepts) {
-    for (const term of [concept.title, ...concept.terms]) {
-      const key = term.toLowerCase();
-      const existing = owners.get(key);
-      if (existing && existing !== concept.slug) {
-        throw new Error(
-          `Glossary term "${term}" is claimed by both "${existing}" and "${concept.slug}". Terms must resolve to exactly one concept.`,
-        );
-      }
-      owners.set(key, concept.slug);
-    }
-  }
 }
 
 function assertRelatedResolve(concepts: Concept[]): void {

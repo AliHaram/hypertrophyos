@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 
 import {
   DEFAULT_LANDMARKS,
-  INVOLVEMENT_WEIGHTS,
   JUNK_VOLUME_RIR_THRESHOLD,
   type LoggedSet,
   classifyVolume,
@@ -13,7 +12,7 @@ import {
 function set(overrides: Partial<LoggedSet> = {}): LoggedSet {
   return {
     muscleId: "chest",
-    involvement: 1,
+    involvement: "direct",
     correctedRir: 1,
     completed: true,
     ...overrides,
@@ -21,20 +20,18 @@ function set(overrides: Partial<LoggedSet> = {}): LoggedSet {
 }
 
 describe("tallyVolume", () => {
-  it("counts a direct set as one and a synergist set as a half", () => {
+  it("counts a direct set as one and a fractional set as a half", () => {
     const tally = tallyVolume([
-      set({ involvement: INVOLVEMENT_WEIGHTS.prime }),
-      set({ involvement: INVOLVEMENT_WEIGHTS.synergist }),
+      set({ involvement: "direct" }),
+      set({ involvement: "fractional" }),
     ]);
 
     expect(tally.effectiveSets).toBe(1.5);
     expect(tally.totalSets).toBe(1.5);
   });
 
-  it("ignores stabiliser involvement entirely", () => {
-    const tally = tallyVolume([
-      set({ involvement: INVOLVEMENT_WEIGHTS.stabilizer }),
-    ]);
+  it("ignores indirect involvement entirely", () => {
+    const tally = tallyVolume([set({ involvement: "indirect" })]);
 
     expect(tally.totalSets).toBe(0);
     expect(tally.effectiveSets).toBe(0);
@@ -72,14 +69,10 @@ describe("tallyVolume", () => {
     expect(tally.totalSets).toBe(0);
   });
 
-  it("clamps involvement outside 0–1 rather than propagating it", () => {
-    expect(tallyVolume([set({ involvement: 4 })]).totalSets).toBe(1);
-    expect(tallyVolume([set({ involvement: -2 })]).totalSets).toBe(0);
-    expect(tallyVolume([set({ involvement: Number.NaN })]).totalSets).toBe(0);
-  });
-
   it("does not accumulate float drift across a week of half-sets", () => {
-    const sets = Array.from({ length: 21 }, () => set({ involvement: 0.5 }));
+    const sets = Array.from({ length: 21 }, () =>
+      set({ involvement: "fractional" }),
+    );
 
     expect(tallyVolume(sets).effectiveSets).toBe(10.5);
   });
@@ -97,9 +90,9 @@ describe("tallyVolume", () => {
 describe("tallyVolumeByMuscle", () => {
   it("splits a compound lift across its muscles at their own weights", () => {
     const byMuscle = tallyVolumeByMuscle([
-      set({ muscleId: "chest", involvement: 1 }),
-      set({ muscleId: "triceps", involvement: 0.5 }),
-      set({ muscleId: "front-delts", involvement: 0.5 }),
+      set({ muscleId: "chest", involvement: "direct" }),
+      set({ muscleId: "triceps", involvement: "fractional" }),
+      set({ muscleId: "front-delts", involvement: "fractional" }),
     ]);
 
     expect(byMuscle.chest?.effectiveSets).toBe(1);

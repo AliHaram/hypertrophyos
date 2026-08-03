@@ -11,6 +11,7 @@ import {
 export const evidenceGradeEnum = pgEnum("evidence_grade", [
   "strong",
   "mixed",
+  "mechanical-inference",
   "weak",
 ]);
 

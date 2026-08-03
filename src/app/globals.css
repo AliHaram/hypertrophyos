@@ -42,6 +42,7 @@
   /* Evidence grading — reserved semantics. */
   --color-evidence-strong: var(--evidence-strong);
   --color-evidence-mixed: var(--evidence-mixed);
+  --color-evidence-mechanical: var(--evidence-mechanical);
   --color-evidence-weak: var(--evidence-weak);
 
   /* Data visualization ramp. Ordered by emphasis, not rainbow. */
@@ -89,6 +90,7 @@
 
   --evidence-strong: oklch(0.52 0.13 152);
   --evidence-mixed: oklch(0.62 0.12 72);
+  --evidence-mechanical: #2a78d6;
   --evidence-weak: oklch(0.55 0.17 25);
 
   /*
@@ -138,6 +140,7 @@
 
   --evidence-strong: oklch(0.72 0.14 152);
   --evidence-mixed: oklch(0.79 0.12 78);
+  --evidence-mechanical: #3987e5;
   --evidence-weak: oklch(0.68 0.16 25);
 
   /* Dark steps are selected against the dark surface, not flipped from light. */
