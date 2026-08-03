@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "phase-*"]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # --- Correctness -----------------------------------------------------
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Unit tests
+        run: pnpm test
+
+      # --- Design system ---------------------------------------------------
+      # Tokens are generated from lib/design/tokens.ts. If the committed CSS is
+      # stale, the TypeScript and the CSS have diverged and the build is lying
+      # about which one is the source.
+      - name: Design tokens are current
+        run: pnpm design:tokens:check
+
+      # Arbitrary Tailwind values, prohibited typefaces, glassmorphism,
+      # decorative gradients, oversized radii.
+      - name: Design system rules
+        run: pnpm design:check
+
+      # --- Build -----------------------------------------------------------
+      # The seven evidence-integrity rules run inside the content loader, so a
+      # violation fails here rather than shipping an unlabelled claim.
+      - name: Build
+        run: pnpm build
+
+      - name: Bundle budget
+        run: pnpm budget:check
+
+  accessibility:
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build
+
+      - name: axe on every route
+        run: pnpm test:a11y

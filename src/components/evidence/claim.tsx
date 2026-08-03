@@ -20,18 +20,16 @@ import { cn } from "@/lib/utils";
 /**
  * Four strokes, distinguishable without colour.
  *
- * `border-double` renders as two hairlines with a gap, which needs at least
- * 3px of border to resolve — hence `border-l-4` on that grade alone while the
- * others sit at 2px. In grayscale the set reads as: unbroken, long dashes,
- * fine dots, and a railroad pair. Verified side by side on /design with
- * saturation stripped, at 1× and 2×.
+ * In grayscale the set reads as: unbroken, long dashes, a railroad pair, and
+ * fine dots. The double rule needs 6px to resolve its gap — at 4px it fuses
+ * into what looks like a thicker solid, which the /design grayscale strip
+ * caught. Stroke definitions live in globals.css as .gutter-* classes.
  */
 const GUTTER: Record<EvidenceGrade, string> = {
-  strong: "border-l-2 border-evidence-strong border-solid",
-  mixed: "border-l-2 border-evidence-mixed border-dashed",
-  "mechanical-inference":
-    "border-l-4 border-evidence-mechanical border-double",
-  weak: "border-l-2 border-evidence-weak border-dotted",
+  strong: "gutter-strong",
+  mixed: "gutter-mixed",
+  "mechanical-inference": "gutter-mechanical",
+  weak: "gutter-weak",
 };
 
 export function Claim({

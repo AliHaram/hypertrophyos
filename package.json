@@ -17,7 +17,8 @@
     "db:sync-content": "tsx --tsconfig tsconfig.json scripts/sync-content.ts",
     "design:tokens": "node scripts/generate-tokens.mjs",
     "design:tokens:check": "node scripts/generate-tokens.mjs --check",
-    "design:check": "node scripts/check-design-tokens.mjs"
+    "design:check": "node scripts/check-design-tokens.mjs",
+    "budget:check": "node scripts/check-bundle-budget.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

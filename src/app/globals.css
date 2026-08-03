@@ -218,6 +218,39 @@
     color: inherit;
   }
 
+  /*
+    Wide tables scroll inside their own container rather than pushing the page
+    sideways. The floor keeps columns legible before the scroll kicks in.
+  */
+  .table-scroll {
+    min-width: 32rem;
+  }
+
+  /*
+    Confidence gutters.
+
+    Four strokes that must stay distinct with colour removed. The double rule
+    needs 6px, not 4: CSS splits the width into three parts, so 4px yields
+    1/2/1 and the two hairlines fuse into what reads as a slightly thicker
+    solid. At 6px it is 2/2/2 and the gap resolves. This was caught on the
+    /design grayscale strip, which is what that strip is for.
+  */
+  .gutter-strong {
+    border-left: 2px solid var(--evidence-strong);
+  }
+
+  .gutter-mixed {
+    border-left: 2px dashed var(--evidence-mixed);
+  }
+
+  .gutter-mechanical {
+    border-left: 6px double var(--evidence-mechanical);
+  }
+
+  .gutter-weak {
+    border-left: 2px dotted var(--evidence-weak);
+  }
+
   /* Interactive targets never fall below the accessibility floor. */
   .target {
     min-height: var(--min-target);
