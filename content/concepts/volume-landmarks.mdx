@@ -1,0 +1,113 @@
+---
+title: Volume landmarks
+category: dosing
+position: 0
+evidenceGrade: mixed
+shortDefinition: Three reference points describing how much weekly work a muscle can use — minimum effective volume, maximum adaptive volume, and maximum recoverable volume. They are useful for orientation and routinely quoted with far more precision than the evidence supports.
+terms:
+  - MEV
+  - MAV
+  - MRV
+  - volume landmarks
+  - minimum effective volume
+  - maximum adaptive volume
+  - maximum recoverable volume
+  - junk volume
+  - effective volume
+citations:
+  - schoenfeld-2017-volume
+  - pelland-2026-dose-response
+  - baz-valle-2022-volume
+  - schoenfeld-2019-frequency
+uncertainty: MEV and MAV are reasonable summaries of a real dose-response relationship. MRV is not measured by any of the cited work — it is inferred from the point at which performance degrades, and no controlled trial has established it as a discrete threshold rather than a gradual decline.
+related:
+  - progressive-overload
+  - motor-unit-recruitment
+  - muscle-protein-synthesis
+---
+
+## What it is
+
+Volume — counted as hard sets per muscle per week — is the dose variable with the clearest relationship to hypertrophy. The landmarks are three reference points on that dose curve.
+
+**MEV**, minimum effective volume, is the least weekly work that produces meaningful growth. Below it, you are maintaining.
+
+**MAV**, maximum adaptive volume, is the range where returns per added set are best.
+
+**MRV**, maximum recoverable volume, is the point beyond which fatigue accumulates faster than it clears, and performance begins to decline.
+
+They are genuinely useful for orientation. They are also, as usually presented, considerably more precise than anything in the literature justifies.
+
+## What the evidence says
+
+The underlying dose-response is solid.
+
+<Claim grade="strong">
+
+Each additional weekly set was associated with an effect-size increase of 0.023 — roughly 0.37% additional hypertrophy per set — across 34 treatment groups from 15 studies. <Cite id="schoenfeld-2017-volume" />
+
+</Claim>
+
+<Claim grade="strong">
+
+A larger meta-regression across 67 studies and 2,058 participants confirmed that both size and strength increase with weekly volume, under models showing clear diminishing returns. <Cite id="pelland-2026-dose-response" />
+
+</Claim>
+
+Note what "0.37% per set" does *not* mean. It is a regression slope averaged across the range the trials covered — not a constant, and certainly not a licence to extrapolate. The curve is logarithmic, not linear, and the difference matters enormously at the top end.
+
+<DoseResponseChart />
+
+For the ranges themselves, the most useful synthesis puts trained lifters in the region of 12 to 20 weekly sets per muscle for best results <Cite id="baz-valle-2022-volume" /> and the 2017 meta-regression suggested a threshold around 10 sets for near-maximal hypertrophy.
+
+Here is what that actually looks like when drawn honestly:
+
+<VolumeLandmarkScale />
+
+The bands overlap. That is not a rendering compromise — it is the finding. One lifter's MRV can sit below another lifter's MEV, and a single number for either would be false precision dressed as guidance.
+
+## Effective volume, and what does not count
+
+A weekly set count is only meaningful if the sets counted were doing something. Two adjustments matter.
+
+**Sets far from failure contribute much less.** A set stopped six reps short recruits few of the motor units that drive growth. The app excludes sets whose bias-corrected RIR exceeds 4 from effective volume and flags them — see <Term>junk volume</Term>. This is a simplification of a gradient rather than a real cliff, and the app says so wherever it applies the rule.
+
+**Indirect work counts fractionally.** A set of bench press is not one set of chest and one set of triceps.
+
+<Claim grade="strong">
+
+Counting indirect sets fractionally — 1.0 for direct work, 0.5 for indirect — predicted adaptation better than counting them fully or not at all. <Cite id="pelland-2026-dose-response" />
+
+</Claim>
+
+This is why the app stores an involvement weight per exercise-muscle pair rather than assuming a set trains everything it touches equally.
+
+## What it means in practice
+
+**Start near the bottom of the range, not the top.** If you are below MEV, adding sets is the highest-value change available to you. If you are already at 20, adding more is close to the worst.
+
+**Let the landmarks be personal.** The app seeds population defaults and then refines them from your own performance data, soreness input, and recovery trend. A static 20-sets-a-week rule describes nobody.
+
+**Judge volume by what it does, not by what it totals.** Quadriceps at 24 weekly sets with squat e1RM down 4% over two weeks is not a well-dosed muscle group. That is what MRV means in operation — a performance observation, not a number you look up.
+
+**Distribute across two sessions.** Not because frequency independently drives growth — volume-equated trials say it largely does not <Cite id="schoenfeld-2019-frequency" /> — but because the last sets of a very long session are performed fatigued and drift toward junk.
+
+## Common mistakes
+
+**Quoting the landmarks as fixed numbers.** "MEV is 10 sets" is the single most common error in this area. It varies by muscle, by lifter, by exercise selection, and by training phase.
+
+**Treating MRV as a target.** It is a ceiling you should mostly stay below, not a goal to approach. Training at MRV means running with no margin for a bad week of sleep.
+
+**Counting sets that were not hard.** The fastest way to appear to be doing 20 sets while receiving the stimulus of 12.
+
+**Adding volume to fix a stall that is not a volume problem.** If the cause is poor recovery or degraded technique, more sets makes it worse. See <Term>progressive overload</Term> for the stall-diagnosis routing.
+
+<Uncertainty>
+
+MEV and MAV are defensible summaries of a real dose-response relationship, though the specific numbers are interpolations rather than measurements.
+
+MRV is on much weaker ground. None of the cited work measured it. It is inferred from the observation that performance eventually declines under sustained high volume, which is real, but no controlled trial has shown it to be a discrete threshold rather than a smooth decline. It is entirely possible that "MRV" names a gradient we have given a boundary to because boundaries are easier to program against.
+
+The junk volume threshold of 4 RIR is our judgement call, not a finding. The dose-response for proximity to failure is a gradient without a clean breakpoint, and a different app could justify 3 or 5. We picked the point where treating a set as equivalent to a near-failure set would be actively misleading, and we surface every set the rule excludes so you can disagree with it.
+
+</Uncertainty>

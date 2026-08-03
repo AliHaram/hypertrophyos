@@ -36,23 +36,20 @@ export function EvidenceChip({
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
+      <TooltipTrigger
+        className={cn(
+          "inline-flex select-none items-center gap-1.5 rounded-full border border-border/80 bg-card px-2 py-0.5 align-middle",
+          "font-mono text-[0.625rem] uppercase tracking-[0.12em] text-muted-foreground",
+          "cursor-help transition-colors hover:border-border hover:text-foreground",
+          className,
+        )}
+      >
         <span
-          className={cn(
-            "inline-flex select-none items-center gap-1.5 rounded-full border border-border/80 bg-card px-2 py-0.5 align-middle",
-            "font-mono text-[0.625rem] uppercase tracking-[0.12em] text-muted-foreground",
-            "cursor-help transition-colors hover:border-border hover:text-foreground",
-            className,
-          )}
-          tabIndex={0}
-        >
-          <span
-            aria-hidden="true"
-            className={cn("size-1.5 shrink-0 rounded-full", DOT_COLOR[grade])}
-          />
-          {showLabel && meta.label}
-          <span className="sr-only">Evidence grade: {meta.label}.</span>
-        </span>
+          aria-hidden="true"
+          className={cn("size-1.5 shrink-0 rounded-full", DOT_COLOR[grade])}
+        />
+        {showLabel && meta.label}
+        <span className="sr-only">Evidence grade: {meta.label}.</span>
       </TooltipTrigger>
       <TooltipContent side="top" className="max-w-72">
         <p className="font-sans text-xs leading-relaxed">

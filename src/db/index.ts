@@ -21,7 +21,6 @@ if (!connectionString) {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var __hypertrophyDb: ReturnType<typeof createClient> | undefined;
 }
 

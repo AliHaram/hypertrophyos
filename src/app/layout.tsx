@@ -53,7 +53,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
+        <TooltipProvider delay={200}>{children}</TooltipProvider>
       </body>
     </html>
   );

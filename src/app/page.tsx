@@ -1,103 +1,139 @@
-import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
+import { EvidenceChip } from "@/components/evidence/evidence-chip";
+import { getAllConcepts } from "@/lib/content/concepts";
+import { ALL_CITATIONS } from "@/lib/evidence/citations";
+
+/**
+ * The hero is the evidence system, demonstrated on itself.
+ *
+ * A training app's landing page normally opens with a large number and a
+ * gradient. This one opens with a graded claim in a confidence gutter, because
+ * the product's actual argument is "we show our reasoning and mark our
+ * uncertainty" — and asserting that in marketing copy would be less
+ * convincing than simply doing it above the fold.
+ */
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const concepts = getAllConcepts();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  return (
+    <main id="main" className="mx-auto max-w-5xl px-5 py-14 sm:px-8 sm:py-24">
+      <p className="eyebrow">HypertrophyOS</p>
+
+      <h1 className="mt-4 max-w-3xl font-heading text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">
+        A training system that tells you what to do today, and why it thinks so.
+      </h1>
+
+      <div className="mt-10 max-w-2xl border-l-2 border-evidence-strong pl-5">
+        <div className="mb-3">
+          <EvidenceChip grade="strong" />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <p className="prose-concept text-lg">
+          Each additional weekly set is associated with roughly{" "}
+          <span className="font-mono tabular-nums">0.37%</span> greater
+          hypertrophy across the range studied — but the curve is logarithmic,
+          not linear, and the tenth set buys about a third of what the first
+          does.
+        </p>
+      </div>
+
+      <div className="mt-6 max-w-2xl border-l-2 border-dashed border-evidence-mixed pl-5">
+        <div className="mb-3">
+          <EvidenceChip grade="mixed" />
+        </div>
+        <p className="prose-concept text-lg">
+          Training in the lengthened position is at least as good as full range
+          of motion, and possibly better. The most recent trial found no
+          advantage. We say so rather than picking the result we prefer.
+        </p>
+      </div>
+
+      <p className="mt-8 max-w-2xl font-sans text-sm leading-relaxed text-muted-foreground">
+        That gutter down the left is the whole idea. Solid where the
+        meta-analyses agree, dashed where they do not. It runs beside every
+        claim in the app, so you can see the shape of an argument&rsquo;s
+        confidence before you read a word of it.
+      </p>
+
+      <div className="mt-10 flex flex-wrap items-center gap-4">
+        <Link
+          href="/knowledge"
+          className="inline-flex min-h-11 items-center gap-2 rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          Read the knowledge layer
+          <ArrowRight className="size-4" aria-hidden="true" />
+        </Link>
+        <Link
+          href="/knowledge/citations"
+          className="inline-flex min-h-11 items-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground"
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+          {ALL_CITATIONS.length} references
+        </Link>
+      </div>
+
+      <section className="mt-20 border-t border-border pt-10">
+        <h2 className="eyebrow mb-6">What this is for</h2>
+        <div className="grid gap-8 sm:grid-cols-3">
+          <Positioning
+            title="Logging apps"
+            body="know what you lifted, and nothing about whether you should have."
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+          <Positioning
+            title="Recovery apps"
+            body="know your readiness, and nothing about your training."
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <Positioning
+            title="This"
+            body="reads both, tracks per-muscle volume against your own landmarks, and shows the rule behind every prescription."
+            emphasised
+          />
+        </div>
+      </section>
+
+      <section className="mt-16 border-t border-border pt-10">
+        <h2 className="eyebrow mb-6">In the knowledge layer now</h2>
+        <ul className="flex flex-wrap gap-x-6 gap-y-3">
+          {concepts.map((concept) => (
+            <li key={concept.slug}>
+              <Link
+                href={`/knowledge/${concept.slug}`}
+                className="inline-flex items-center gap-2 text-sm text-foreground/85 transition-colors hover:text-primary"
+              >
+                <EvidenceChip grade={concept.evidenceGrade} showLabel={false} />
+                {concept.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </main>
+  );
+}
+
+function Positioning({
+  title,
+  body,
+  emphasised = false,
+}: {
+  title: string;
+  body: string;
+  emphasised?: boolean;
+}) {
+  return (
+    <div>
+      <h3
+        className={
+          emphasised
+            ? "font-heading text-base font-semibold text-primary"
+            : "font-heading text-base font-semibold text-muted-foreground"
+        }
+      >
+        {title}
+      </h3>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+        {body}
+      </p>
     </div>
   );
 }

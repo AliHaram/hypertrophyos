@@ -66,6 +66,8 @@ export function DoseResponseChart() {
             />
             <XAxis
               dataKey="sets"
+              // One label every five sets; 31 of them collide into a smear.
+              ticks={[0, 5, 10, 15, 20, 25, 30]}
               tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
               tickLine={false}
               axisLine={{ stroke: "var(--border)" }}
@@ -91,7 +93,8 @@ export function DoseResponseChart() {
               strokeOpacity={0.7}
               label={{
                 value: "≈10 sets",
-                position: "top",
+                position: "insideTopRight",
+                offset: 8,
                 fill: "var(--muted-foreground)",
                 fontSize: 10,
               }}
@@ -106,11 +109,10 @@ export function DoseResponseChart() {
               }}
               labelStyle={{ color: "var(--muted-foreground)" }}
               labelFormatter={(value) => `${value} weekly sets`}
-              formatter={(value: number, name) =>
-                name === "gain"
-                  ? [`${value.toFixed(2)}%`, "Modelled gain"]
-                  : [`${value.toFixed(2)}%`, "Next set adds"]
-              }
+              formatter={(value) => [
+                `${Number(value).toFixed(2)}%`,
+                "Modelled gain",
+              ]}
             />
             <Area
               type="monotone"

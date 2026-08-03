@@ -94,22 +94,31 @@ export function VolumeLandmarkScale() {
           );
         })}
 
-        <div
-          className="relative h-5 border-t border-border pt-1.5"
-          aria-hidden="true"
-        >
-          {[0, 7, 14, 21, 28].map((tick) => (
-            <span
-              key={tick}
-              className="absolute -translate-x-1/2 font-mono text-[0.625rem] tabular-nums text-muted-foreground"
-              style={{ left: `${percent(tick)}%` }}
-            >
-              {tick}
-            </span>
-          ))}
-          <span className="absolute right-0 top-1.5 font-mono text-[0.625rem] uppercase tracking-[0.1em] text-muted-foreground">
+        <div aria-hidden="true">
+          <div className="relative h-4 border-t border-border pt-1.5">
+            {[0, 7, 14, 21, 28].map((tick) => (
+              <span
+                key={tick}
+                className="absolute font-mono text-[0.625rem] tabular-nums text-muted-foreground"
+                style={{
+                  left: `${percent(tick)}%`,
+                  // The end ticks anchor to their edge instead of centring, so
+                  // neither hangs outside the plot area.
+                  transform:
+                    tick === 0
+                      ? "none"
+                      : tick === 28
+                        ? "translateX(-100%)"
+                        : "translateX(-50%)",
+                }}
+              >
+                {tick}
+              </span>
+            ))}
+          </div>
+          <p className="mt-3 text-right font-mono text-[0.625rem] uppercase tracking-[0.1em] text-muted-foreground">
             sets / week
-          </span>
+          </p>
         </div>
       </div>
     </ChartFigure>

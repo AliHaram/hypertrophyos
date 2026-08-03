@@ -34,21 +34,28 @@ export function CitationRef({
   const url = citationUrl(citation);
 
   return (
-    <HoverCard openDelay={120} closeDelay={80}>
-      <HoverCardTrigger asChild>
-        <a
-          href={url}
-          target="_blank"
-          rel="noreferrer"
-          className={cn(
-            "mx-0.5 inline-flex items-baseline gap-0.5 rounded-sm font-mono text-[0.7em] align-super",
-            "text-primary underline decoration-dotted underline-offset-2",
-            "hover:decoration-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-            className,
-          )}
-        >
-          {citation.authors.split(",")[0]} {citation.year}
-        </a>
+    <HoverCard>
+      <HoverCardTrigger
+        delay={120}
+        closeDelay={80}
+        render={
+          <a
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+            className={cn(
+              // Sits on the baseline with a small lift rather than as a true
+              // superscript — full superscript at this density opened visible
+              // gaps in the leading of every paragraph containing a reference.
+              "mx-[0.15em] inline-flex items-baseline rounded-sm font-mono text-[0.62em] leading-none",
+              "relative -top-[0.15em] text-primary/90 underline decoration-dotted underline-offset-2",
+              "hover:text-primary hover:decoration-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+              className,
+            )}
+          />
+        }
+      >
+        {citation.authors.split(",")[0]} {citation.year}
       </HoverCardTrigger>
       <HoverCardContent side="top" className="w-96 font-sans">
         <p className="eyebrow mb-2">{citation.design.replace(/-/g, " ")}</p>

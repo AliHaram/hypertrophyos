@@ -41,19 +41,18 @@ export function Term({
   }
 
   return (
-    <HoverCard openDelay={150} closeDelay={100}>
-      <HoverCardTrigger asChild>
-        <button
-          type="button"
-          className={cn(
-            "cursor-help border-b border-dotted border-muted-foreground/60 bg-transparent p-0 text-left font-[inherit] text-[inherit] leading-[inherit]",
-            "hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-            className,
-          )}
-          aria-label={`${key}: show definition`}
-        >
-          {children}
-        </button>
+    <HoverCard>
+      <HoverCardTrigger
+        delay={150}
+        closeDelay={100}
+        className={cn(
+          "cursor-help border-b border-dotted border-muted-foreground/60 bg-transparent p-0 text-left font-[inherit] text-[inherit] leading-[inherit]",
+          "hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+          className,
+        )}
+        aria-label={`${key}: show definition`}
+      >
+        {children}
       </HoverCardTrigger>
       <HoverCardContent side="top" className="w-80 font-sans">
         <div className="flex items-start justify-between gap-3">
