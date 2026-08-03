@@ -117,6 +117,27 @@ for (const [surface, roles] of Object.entries(t.SURFACE_ROLES)) {
   for (const [role, value] of Object.entries(roles)) {
     lines.push(`  --surface-${kebab(role)}: ${value};`);
   }
+  // The vendored shadcn primitives read these raw names directly, and the
+  // stylesheet paints the body from --background. Remapping only the Tailwind
+  // utility names left those at shadcn's defaults, which is how the knowledge
+  // layer ended up as light text on a white background.
+  lines.push(`  --background: ${roles.background};`);
+  lines.push(`  --foreground: ${roles.textBody};`);
+  lines.push(`  --card: ${roles.surface};`);
+  lines.push(`  --card-foreground: ${roles.textBody};`);
+  lines.push(`  --popover: ${roles.surfaceRaised};`);
+  lines.push(`  --popover-foreground: ${roles.textBody};`);
+  lines.push(`  --primary: ${roles.textStrong};`);
+  lines.push(`  --primary-foreground: ${roles.background};`);
+  lines.push(`  --secondary: ${roles.surfaceRaised};`);
+  lines.push(`  --secondary-foreground: ${roles.textBody};`);
+  lines.push(`  --muted: ${roles.surfaceRaised};`);
+  lines.push(`  --muted-foreground: ${roles.textMuted};`);
+  lines.push(`  --accent: ${roles.surfaceRaised};`);
+  lines.push(`  --accent-foreground: ${roles.textStrong};`);
+  lines.push(`  --border: ${roles.hairline};`);
+  lines.push(`  --input: ${roles.border};`);
+  lines.push(`  --ring: ${roles.textMuted};`);
   for (const [grade, modes] of Object.entries(t.EVIDENCE)) {
     lines.push(`  --evidence-${grade}: ${modes[surface]};`);
   }
