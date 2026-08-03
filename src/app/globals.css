@@ -91,17 +91,28 @@
   --evidence-mixed: oklch(0.62 0.12 72);
   --evidence-weak: oklch(0.55 0.17 25);
 
-  --chart-1: oklch(0.52 0.085 213);
-  --chart-2: oklch(0.58 0.1 265);
-  --chart-3: oklch(0.62 0.12 72);
-  --chart-4: oklch(0.52 0.13 152);
-  --chart-5: oklch(0.55 0.11 320);
+  /*
+    Chart series and volume-zone colours are validated, not chosen. Both sets
+    clear the six-check palette validator against this mode's surface —
+    lightness band, chroma floor, CVD separation under protanopia and
+    deuteranopia, normal-vision separation, and contrast. Do not hand-edit a
+    value here without re-running the validator for both modes.
 
-  --landmark-below: oklch(0.6 0.02 250);
-  --landmark-mev: oklch(0.55 0.1 213);
-  --landmark-mav: oklch(0.52 0.13 152);
-  --landmark-mrv: oklch(0.62 0.12 72);
-  --landmark-over: oklch(0.55 0.17 25);
+    Slots 3 and 4 sit below 3:1 on the light surface, which is permitted only
+    because every chart ships direct labels and a table view.
+  */
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+
+  /* Volume zones are a status scale: ordered, reserved, always icon + label. */
+  --landmark-below: #898781;
+  --landmark-mev: #0ca30c;
+  --landmark-mav: #fab219;
+  --landmark-mrv: #ec835a;
+  --landmark-over: #d03b3b;
 }
 
 .dark {
@@ -129,17 +140,18 @@
   --evidence-mixed: oklch(0.79 0.12 78);
   --evidence-weak: oklch(0.68 0.16 25);
 
-  --chart-1: oklch(0.74 0.09 210);
-  --chart-2: oklch(0.7 0.11 265);
-  --chart-3: oklch(0.79 0.12 78);
-  --chart-4: oklch(0.72 0.14 152);
-  --chart-5: oklch(0.72 0.12 320);
+  /* Dark steps are selected against the dark surface, not flipped from light. */
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-5: #d55181;
 
-  --landmark-below: oklch(0.55 0.02 250);
-  --landmark-mev: oklch(0.7 0.09 213);
-  --landmark-mav: oklch(0.72 0.14 152);
-  --landmark-mrv: oklch(0.79 0.12 78);
-  --landmark-over: oklch(0.68 0.16 25);
+  --landmark-below: #898781;
+  --landmark-mev: #0ca30c;
+  --landmark-mav: #fab219;
+  --landmark-mrv: #ec835a;
+  --landmark-over: #d03b3b;
 }
 
 @layer base {
