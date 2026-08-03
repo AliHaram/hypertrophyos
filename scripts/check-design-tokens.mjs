@@ -71,6 +71,21 @@ const RULES = [
     allowlist: ["src/components/charts/"],
   },
   {
+    /*
+      Catches malformed colour utilities — the class of damage a careless
+      find-and-replace produces. `text-text-strong-foreground` is not a real
+      utility, so Tailwind emits nothing and the element silently inherits its
+      parent's colour. That shipped a near-invisible button on the landing
+      page: the regex `\btext-primary\b` matched inside
+      `text-primary-foreground`, because a hyphen is a word boundary.
+    */
+    id: "malformed-color-utility",
+    pattern:
+      /\b(?:text|bg|border|outline|decoration|fill|stroke)-(?:text|bg|surface)-(?:strong|body|muted|raised)-[a-z]+\b/g,
+    message: (m) =>
+      `"${m}" is not a real utility — Tailwind emits nothing and the element inherits its parent's colour`,
+  },
+  {
     id: "oversized-radius",
     pattern: /\brounded-(?:2xl|3xl|full)\b/g,
     message: (m) =>

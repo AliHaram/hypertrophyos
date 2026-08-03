@@ -59,7 +59,7 @@ export default function Home() {
       <div className="mt-10 flex flex-wrap items-center gap-4">
         <Link
           href="/knowledge"
-          className="inline-flex min-h-11 items-center gap-2 rounded-md bg-text-strong px-5 text-sm font-medium text-text-strong-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted"
+          className="inline-flex min-h-11 items-center gap-2 rounded-md bg-text-strong px-5 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted"
         >
           Read the knowledge layer
           <ArrowRight className="size-4" aria-hidden="true" />
