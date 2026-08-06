@@ -28,13 +28,13 @@ export const PEAK_POSITIONS = [
   "even",
 ] as const;
 
-export const peakPositionSchema = z.enum(PEAK_POSITIONS);
+const peakPositionSchema = z.enum(PEAK_POSITIONS);
 export type PeakPosition = z.infer<typeof peakPositionSchema>;
 
-export const muscleLengthSchema = z.enum(["lengthened", "mid", "shortened"]);
+const muscleLengthSchema = z.enum(["lengthened", "mid", "shortened"]);
 export type MuscleLength = z.infer<typeof muscleLengthSchema>;
 
-export const failureProtocolSchema = z.enum([
+const failureProtocolSchema = z.enum([
   "true-failure-safe",
   "failure-with-safety-setup",
   "terminate-at-form-breakdown",
@@ -42,11 +42,11 @@ export const failureProtocolSchema = z.enum([
 ]);
 export type FailureProtocol = z.infer<typeof failureProtocolSchema>;
 
-export const axialLoadSchema = z.enum(["none", "low", "moderate", "high"]);
-export const jointStressSchema = z.enum(["low", "moderate", "high"]);
-export const stabilityDemandSchema = z.enum(["low", "moderate", "high"]);
+const axialLoadSchema = z.enum(["none", "low", "moderate", "high"]);
+const jointStressSchema = z.enum(["low", "moderate", "high"]);
+const stabilityDemandSchema = z.enum(["low", "moderate", "high"]);
 
-export const equipmentSchema = z.enum([
+const equipmentSchema = z.enum([
   "barbell",
   "dumbbell",
   "machine",
@@ -75,7 +75,7 @@ export const resistanceProfileSchema = z
     message: "the peak sample must be exactly 1.0 — profiles are normalised",
   });
 
-export const exerciseMuscleSchema = z.object({
+const exerciseMuscleSchema = z.object({
   muscleId: z.string().min(1),
   involvement: involvementSchema,
   primeMover: z.boolean().default(false),

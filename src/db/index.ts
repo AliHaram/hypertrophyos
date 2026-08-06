@@ -39,5 +39,3 @@ export const db = globalThis.__hypertrophyDb ?? createClient();
 if (process.env.NODE_ENV !== "production") {
   globalThis.__hypertrophyDb = db;
 }
-
-export { schema };

@@ -21,7 +21,7 @@ import { getConcept } from "@/lib/content/concepts";
  * failure the orphaned-term register exists to prevent everywhere else.
  */
 
-export interface ConceptDependency {
+interface ConceptDependency {
   /** The exercise field whose claim this concept underwrites. */
   field: string;
   slug: string;

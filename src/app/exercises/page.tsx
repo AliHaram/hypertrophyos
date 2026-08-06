@@ -42,6 +42,19 @@ const EQUIPMENT_FILTERS: readonly Equipment[] = [
   "machine",
 ];
 
+/**
+ * A single search-param value, with blanks normalised away.
+ *
+ * `?muscle=` and no `muscle` at all mean the same thing to a reader, so they
+ * have to mean the same thing here. Normalising at the boundary is what keeps
+ * every downstream check from having to decide whether an empty string counts.
+ */
+function readParam(value: string | string[] | undefined): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  return trimmed === "" ? undefined : trimmed;
+}
+
 function matches(exercise: Exercise, filters: Filters): boolean {
   if (filters.peak && exercise.peakPosition !== filters.peak) return false;
   if (filters.equipment && exercise.equipment !== filters.equipment) {
@@ -75,19 +88,16 @@ export default async function ExercisesIndex({
   const exercises = getAllExercises();
 
   const filters: Filters = {
-    muscle: typeof params.muscle === "string" ? params.muscle : undefined,
-    equipment:
-      typeof params.equipment === "string"
-        ? (params.equipment as Equipment)
-        : undefined,
-    peak:
-      typeof params.peak === "string"
-        ? (params.peak as PeakPosition)
-        : undefined,
+    muscle: readParam(params.muscle),
+    equipment: readParam(params.equipment) as Equipment | undefined,
+    peak: readParam(params.peak) as PeakPosition | undefined,
   };
 
   const visible = exercises.filter((exercise) => matches(exercise, filters));
-  const active = Boolean(filters.muscle || filters.equipment || filters.peak);
+  // `.some(Boolean)` rather than a chain of `||`, because the question is
+  // "is any filter set" and a blank is not set. `??` would answer a different
+  // question and get it wrong: `"" ?? undefined ?? "quads"` is `""`.
+  const active = [filters.muscle, filters.equipment, filters.peak].some(Boolean);
 
   // Prime movers only. Filtering by every muscle any exercise touches would
   // offer eighteen options over eight exercises, most of them returning one

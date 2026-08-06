@@ -97,7 +97,7 @@ export const conceptFrontmatterSchema = z.object({
   related: z.array(z.string().min(1)).default([]),
 });
 
-export type ConceptFrontmatter = z.infer<typeof conceptFrontmatterSchema>;
+type ConceptFrontmatter = z.infer<typeof conceptFrontmatterSchema>;
 
 export interface Concept extends ConceptFrontmatter {
   slug: string;

@@ -17,7 +17,6 @@ import type { Citation } from "@/lib/evidence/types";
 import {
   CONCEPT_CATEGORIES,
   type Concept,
-  type ConceptCategory,
   conceptFrontmatterSchema,
   conceptViolations,
   estimateReadingMinutes,
@@ -127,12 +126,6 @@ export function getConcept(slug: string): Concept | undefined {
   return getAllConcepts().find((concept) => concept.slug === slug);
 }
 
-export function getConceptsByCategory(
-  category: ConceptCategory,
-): Concept[] {
-  return getAllConcepts().filter((concept) => concept.category === category);
-}
-
 export function getConceptCitations(slug: string): Citation[] {
   const concept = getConcept(slug);
   return concept ? resolveCitations(concept.citations) : [];
@@ -154,7 +147,7 @@ export interface GlossaryEntry {
 
 let glossaryCache: Map<string, GlossaryEntry> | undefined;
 
-export function getGlossary(): Map<string, GlossaryEntry> {
+function getGlossary(): Map<string, GlossaryEntry> {
   if (glossaryCache) return glossaryCache;
 
   const glossary = new Map<string, GlossaryEntry>();

@@ -110,11 +110,11 @@ export const citationSchema = z.object({
 
 export type Citation = z.infer<typeof citationSchema>;
 
-export function doiUrl(citation: Citation): string | undefined {
+function doiUrl(citation: Citation): string | undefined {
   return citation.doi ? `https://doi.org/${citation.doi}` : undefined;
 }
 
-export function pubmedUrl(citation: Citation): string | undefined {
+function pubmedUrl(citation: Citation): string | undefined {
   return citation.pmid
     ? `https://pubmed.ncbi.nlm.nih.gov/${citation.pmid}/`
     : undefined;
@@ -123,9 +123,4 @@ export function pubmedUrl(citation: Citation): string | undefined {
 /** Preferred external link: DOI first, PubMed as fallback. */
 export function citationUrl(citation: Citation): string | undefined {
   return doiUrl(citation) ?? pubmedUrl(citation);
-}
-
-/** "Schoenfeld et al. (2017)" — the inline form used in prose. */
-export function formatInline(citation: Citation): string {
-  return `${citation.authors} (${citation.year})`;
 }

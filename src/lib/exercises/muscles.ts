@@ -22,7 +22,7 @@ import { z } from "zod";
  * rather than omitted so the column's consumer is obvious when it arrives.
  */
 
-export const MUSCLE_REGIONS = [
+const MUSCLE_REGIONS = [
   "legs",
   "hips",
   "back",
@@ -32,9 +32,7 @@ export const MUSCLE_REGIONS = [
   "trunk",
 ] as const;
 
-export type MuscleRegion = (typeof MUSCLE_REGIONS)[number];
-
-export const muscleSchema = z.object({
+const muscleSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   region: z.enum(MUSCLE_REGIONS),
@@ -145,17 +143,9 @@ const RECORDS = [
   },
 ] as const satisfies readonly Muscle[];
 
-export type MuscleId = (typeof RECORDS)[number]["id"];
-
 export const MUSCLES: Record<string, Muscle> = Object.fromEntries(
   RECORDS.map((record) => [record.id, muscleSchema.parse(record)]),
 );
-
-export const ALL_MUSCLES: readonly Muscle[] = Object.values(MUSCLES);
-
-export function getMuscle(id: string): Muscle | undefined {
-  return MUSCLES[id];
-}
 
 /** Display name for a muscle id, throwing on an id the registry does not know. */
 export function muscleName(id: string): string {
@@ -166,8 +156,4 @@ export function muscleName(id: string): string {
     );
   }
   return muscle.name;
-}
-
-export function musclesByRegion(region: MuscleRegion): readonly Muscle[] {
-  return ALL_MUSCLES.filter((muscle) => muscle.region === region);
 }

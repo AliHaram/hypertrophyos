@@ -229,7 +229,7 @@ export function checkStaleOrphanRegistrations(
  * Fields an exercise cannot omit. Each is a claim about the movement, so each
  * carries a grade — an ungraded SFR rating is an opinion wearing a number.
  */
-export const REQUIRED_EXERCISE_FIELDS = [
+const REQUIRED_EXERCISE_FIELDS = [
   "primeMover",
   "muscleInvolvement",
   "resistanceProfile",
@@ -237,10 +237,8 @@ export const REQUIRED_EXERCISE_FIELDS = [
   "sfr",
 ] as const;
 
-export type RequiredExerciseField = (typeof REQUIRED_EXERCISE_FIELDS)[number];
-
 /** A field value paired with the grade that qualifies it. */
-export interface GradedField {
+interface GradedField {
   grade: EvidenceGrade;
   derivation?: string | undefined;
   citations?: readonly string[];

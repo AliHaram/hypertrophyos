@@ -262,8 +262,6 @@ export const CITATIONS: Record<string, Citation> = Object.fromEntries(
   RECORDS.map((record) => [record.id, citationSchema.parse(record)]),
 );
 
-export type CitationId = (typeof RECORDS)[number]["id"];
-
 export const ALL_CITATIONS: Citation[] = Object.values(CITATIONS).sort((a, b) =>
   a.authors.localeCompare(b.authors),
 );

@@ -17,11 +17,9 @@ import { z } from "zod";
 
 export const SURFACE_COOKIE = "hos-surface";
 
-export const surfaceSchema = z.enum(["dark", "light"]);
-export type Surface = z.infer<typeof surfaceSchema>;
+export type Surface = "dark" | "light";
 
-export const surfacePreferenceSchema = z.enum(["auto", "dark", "light"]);
-export type SurfacePreference = z.infer<typeof surfacePreferenceSchema>;
+const surfacePreferenceSchema = z.enum(["auto", "dark", "light"]);
 
 /**
  * Resolves the surface to render.

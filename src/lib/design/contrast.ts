@@ -27,7 +27,7 @@ export function parseHex(hex: string): [number, number, number] {
 }
 
 /** WCAG 2.1 relative luminance. */
-export function relativeLuminance(hex: string): number {
+function relativeLuminance(hex: string): number {
   const [r, g, b] = parseHex(hex).map((channel) => {
     const s = channel / 255;
     return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;

@@ -34,6 +34,13 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # An export nothing imports is the defect class this project is least
+      # able to absorb: three of them have now shipped, and in a codebase whose
+      # safety rests on checkers, a checker nobody calls reads as coverage while
+      # providing none. See docs/adr/0006-unread-declarations-are-defects.md.
+      - name: No unread declarations
+        run: pnpm deadcode:check
+
       - name: Unit tests
         run: pnpm test
 

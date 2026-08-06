@@ -100,7 +100,7 @@ export function muscleLengthDistance(a: MuscleLength, b: MuscleLength): number {
 // Tradeoffs
 // ---------------------------------------------------------------------------
 
-export type TradeoffDimension =
+type TradeoffDimension =
   | "peak-position"
   | "muscle-length"
   | "equipment"

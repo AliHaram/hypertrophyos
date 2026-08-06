@@ -26,11 +26,15 @@
  */
 import { type Involvement, involvementMultiplier } from "./involvement";
 
-export {
-  type Involvement,
-  INVOLVEMENT_META,
-  involvementMultiplier,
-} from "./involvement";
+/*
+  The involvement tiers deliberately are *not* re-exported from here.
+
+  They were, and nothing ever imported them by that path — consumers went to
+  `./involvement` directly, which is where they belong. A second public route to
+  the same symbols is a second thing to keep in agreement for no benefit, and it
+  is the same defect class as a checker nobody calls: it reads as API while
+  serving nobody.
+*/
 
 /**
  * Corrected RIR above which a set stops contributing meaningfully to the
@@ -155,6 +159,14 @@ export function classifyVolume(
   return "over-mrv";
 }
 
+/**
+ * Reader-facing copy for each zone.
+ *
+ * @reserved phase-4 — written with `classifyVolume`, displayed by the dashboard
+ * that does not exist yet. Held rather than deleted because the wording is
+ * reviewed content, not scaffolding; the tag is what stops it counting as an
+ * unread export while making the reservation greppable and dated.
+ */
 export const VOLUME_ZONE_META: Record<
   VolumeZone,
   { label: string; meaning: string }

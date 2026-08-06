@@ -14,7 +14,7 @@
  * that hides it.
  */
 
-export const PHASES = [
+const PHASES = [
   "phase-1",
   "phase-2",
   "phase-3",
@@ -52,7 +52,7 @@ export interface OrphanedTerm {
   reason: string;
 }
 
-export const ORPHANED_TERMS: readonly OrphanedTerm[] = [
+const ORPHANED_TERMS: readonly OrphanedTerm[] = [
   {
     term: "proximity to failure",
     resolveBy: "phase-3",
