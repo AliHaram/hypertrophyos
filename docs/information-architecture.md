@@ -16,43 +16,51 @@ layout.** A route that is not in `NAV` is not reachable, and CI says so.
 
 ## 1. What is actually on disk
 
-Five route patterns, eleven URLs. Verified against `src/app` at the time of
-writing, not against the plan.
+Seven route patterns, twenty-one URLs, after the exercise slice landed.
+Verified against `src/app`, not against the plan.
 
 | Route | File | Surface | Notes |
 |---|---|---|---|
-| `/` | `app/page.tsx` | dark | Landing. Already opens with a graded claim in a gutter. |
+| `/` | `app/page.tsx` | dark → light | Landing. Opens with a graded claim in a gutter. Surface changes in D5. |
 | `/knowledge` | `app/knowledge/page.tsx` | light | Index, grouped by category, with a "not yet written" block. |
-| `/knowledge/[slug]` | `app/knowledge/[slug]/page.tsx` | light | 7 concepts in `content/concepts/`. |
-| `/knowledge/citations` | `app/knowledge/citations/page.tsx` | light | Bibliography. Already carries back-links. |
+| `/knowledge/[slug]` | `app/knowledge/[slug]/page.tsx` | light | 8 concepts in `content/concepts/`. |
+| `/citations` | `app/citations/page.tsx` | light | Bibliography, 18 records. 308 from the old path. |
+| `/exercises` | `app/exercises/page.tsx` | light | Index with a search-param filter rail. |
+| `/exercises/[slug]` | `app/exercises/[slug]/page.tsx` | light | 8 exercises, statically generated. |
 | `/design` | `app/design/page.tsx` | dark | Internal system gallery. |
 
-Nothing links to anything except: landing → knowledge, knowledge → citations,
-concept → knowledge, concept → related concepts, citation → citing concepts.
-There is no shell, no cross-section navigation, and no way to discover
-`/design` at all.
+Cross-links that now exist: landing → knowledge/citations, knowledge →
+citations, concept → related concepts, concept → exercises (per peak position,
+derived), citation → citing concepts, exercise → concepts it depends on,
+exercise → substitutes and complements (derived and ranked).
+
+**There is still no shell, no primary navigation, and no way to discover
+`/design` or reach `/exercises` from anywhere except a concept page.** That is
+what Part D is for.
 
 ### Corrections to the brief's assumed shape
 
-The brief sketched a route map to be corrected against disk. Corrected:
+The brief sketched a route map to be corrected against disk. Corrected, with
+what the slice then changed:
 
-- **`/exercises` does not exist, in any form.** `src/lib/exercises/schema.ts`
-  and `src/db/schema/exercises.ts` model exercise mechanics carefully and
-  `drizzle/0001_exercise_mechanics.sql` is written, but there are **zero
-  exercise records in the repository**. Phase 2 modelled the library; it did
-  not populate it.
+- **`/exercises` did not exist in any form.** The schema, the Postgres tables
+  and `drizzle/0001_exercise_mechanics.sql` were written; there were **zero
+  exercise records**. Phase 2 modelled the library and did not populate it.
+  *Now: eight authored entries, both routes live.*
+- **There was no substitution engine.** *Now: `lib/exercises/substitutions.ts`,
+  ranked with explicit tradeoffs, plus the inverse complement query.*
+- **There was no resistance-profile concept** — a registered orphaned term due
+  `phase-2`. *Now written; the register entry is deleted and `CURRENT_PHASE` is
+  `phase-2`.*
+- **`/citations` was at `/knowledge/citations`.** *Now moved, with a tested 308.
+  See ADR 0005.*
 - **`/glossary` does not exist**, but is derivable today. `getGlossary()` in
   `lib/content/concepts.ts` already returns the full term → concept map built
-  from concept frontmatter. The index page is close to free.
-- **`/citations` is at `/knowledge/citations`.** Moving to root — see
-  `docs/adr/0005-citations-are-shared-infrastructure.md`.
-- **There is no substitution engine.** `src/lib/training/` holds
-  `dose-response`, `involvement`, `volume`, `overload-levers`. Nothing ranks
-  exercise alternatives.
-- **There is no resistance-profile concept.** It is a registered *orphaned
-  term* in `lib/content/orphaned-terms.ts`, due `phase-2`, still unwritten.
+  from concept frontmatter. The index page is close to free. **Still to build,
+  in D4.**
 - **There is no anatomical map component**, and no SVG body data anywhere in
   `src/` or `public/`. `muscles.svgPathId` is a column with no consumer.
+  **Deferred deliberately** — see §8.
 - The product is named **HypertrophyOS** (`package.json`, root metadata). The
   repository directory is `MuscleTheory`; the product name is what ships.
 
@@ -343,25 +351,24 @@ The exercise slice lands first, as its own commits, and is reported before any
 navigation work starts. Cross-linking half-populated content means wiring links
 to things that change underneath you.
 
-**Context 1 — the exercise slice**
+**Context 1 — the exercise slice — done**
 
-1. Move `/knowledge/citations` → `/citations`: 308 in `next.config.ts`
-   `redirects()`, surface declaration, test asserting the old path resolves.
-   ADR alongside.
-2. Fix `routeSurface()` prefix matching, with tests.
-3. Author eight exercises: back squat, leg press, Romanian deadlift, seated leg
-   curl, incline dumbbell press, machine chest fly, lateral raise,
-   chest-supported row. Spans all four peak positions and all four failure
-   protocols; leaves the substitution engine two candidates in each of three
-   muscle groups. Every derivation, SFR rationale, and cue has to survive the
-   integrity checker.
-4. Write the resistance-profile concept. Clears the `phase-2` orphan; bump
-   `CURRENT_PHASE` to `phase-2` in the same commit that lands it.
-5. Multi-series resistance-profile curve component.
-6. Substitution ranker in `lib/training/`.
-7. `/exercises` and `/exercises/[slug]`, including the designed involvement
-   table.
-8. **Report. Stop.**
+1. ✅ `/knowledge/citations` → `/citations`, 308 in `next.config.ts`, tested.
+2. ✅ `routeSurface()` prefix matching fixed, 13 tests where there were none.
+3. ✅ Eight exercises authored, spanning all four peak positions and all four
+   failure protocols, leaving the ranker two candidates in three muscle groups.
+4. ✅ Resistance-profile concept written; `phase-2` orphan cleared and
+   `CURRENT_PHASE` bumped.
+5. ✅ Multi-series resistance-profile curve.
+6. ✅ Substitution ranker in `lib/exercises/substitutions.ts` — note the module
+   landed under `exercises/`, not `training/` as first planned: it operates on
+   the library rather than on a training session.
+7. ✅ `/exercises` and `/exercises/[slug]` with the designed involvement table.
+8. ✅ Reported.
+
+Also landed, both found while doing the above: rule 8 in the integrity checker
+(`staleRegistrations` was exported and never called, leaving the orphan register
+enforced in only one direction), and a `limit: 0` falsy-check bug in the ranker.
 
 **Context 2 — Part D**
 
@@ -375,13 +382,24 @@ plan lives only in a conversation.
 
 ---
 
-## 10. Open questions for review
+## 10. Questions resolved at review
 
-1. **`/water` under Train or Dashboard?** Nothing on disk settles it (§2).
-2. **Mobile bottom bar: live-only, or all four with two disabled?** I have
-   argued for live-only and departed from the brief to do it (§3).
-3. **Section order — product order with two disabled items leading?** The
-   alternative is live-first, which reads better today and lies about the
-   product (§3).
-4. **`/exercises/compare` at phase-3?** It is nearly free once the multi-series
-   curve exists. It could land in Part D instead of being declared planned.
+1. **`/water` → Train.** Hydration is the highest-frequency, lowest-ceremony
+   interaction in the product — logged in seconds, many times a day — so it
+   belongs where the thumb already is. It reads Whoop strain in Phase 5 to set
+   a target, but consuming recovery data does not make it a recovery view.
+2. **Mobile bottom bar renders live sections only.** A disabled thumb target
+   carrying a tooltip that cannot fire is a dead control with no explanation.
+   In the shell overflow, where planned sections *do* appear on mobile, the
+   phase is **visible text, not a tooltip**, for the same reason.
+3. **Product order kept, with the phase shown inline on desktop too.** The
+   objection to two disabled items leading was never the ordering — it was that
+   an unexplained grey item at position one reads as broken. "Train · Phase 3"
+   at a glance is a product stating its shape. With the label visible, product
+   order is right, and it avoids reordering at Phase 3 and again at Phase 4.
+4. **`/exercises/compare` stays planned.** It is cheap, which is exactly why it
+   is tempting, and the slice has a well-drawn boundary that has been holding.
+   The multi-series curve gets used overlaid on the landing page instead —
+   the demonstration without the route. If Part D lands with budget left it can
+   be promoted as a small follow-up commit, but it must not compete with D5
+   polish for attention.
