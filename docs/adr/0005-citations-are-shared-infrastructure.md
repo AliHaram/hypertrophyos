@@ -45,6 +45,39 @@ section grouping answers "where does a reader browsing look for this"; the URL
 answers "what owns this". Those have different answers here and the split is
 deliberate.
 
+### Declared order, not inherited order
+
+Declaring a surface for `/citations` surfaced a latent bug and, with it, a rule
+worth stating generally.
+
+`routeSurface()` resolved by iterating `Object.keys(ROUTE_SURFACE)` and taking
+the first prefix match. That makes correctness depend on object-literal key
+order, which carries no ordering contract — a nested override could be shadowed
+by its own parent depending on where someone happened to type it, and `"/"`
+could not be added at all, because every path starts with it and the landing
+rule would have claimed the entire app.
+
+**This is the second time implicit key ordering has been a bug here.**
+`NEUTRAL_STEPS` exists because `Object.keys(NEUTRAL)` hoists `"10"` and `"11"`
+ahead of `"00"`–`"09"` — they are canonical array-index strings and the others
+are not — so any consumer iterating the ramp object rendered it out of order.
+Two instances is a pattern, so the rule is now written down rather than fixed
+case by case:
+
+> **Any structure whose correctness depends on order declares that order
+> explicitly. Never inherit it from an object literal.**
+
+The fix here derives an explicit longest-prefix-first `MATCH_ORDER` by sort, so
+the declaration can stay grouped by surface — which is how a reader checks it —
+while match order is computed rather than typed. `surface.test.ts` asserts the
+sort produces what it claims, that a nested override resolves ahead of its
+parent, and that matching happens on segment boundaries so `/designer` is not
+inside `/design`.
+
+The function had **no callers and no tests** — surfaces were applied by hand in
+each route group's layout — which is why the bug was invisible. It goes live in
+Part D when the app shell resolves surface from the pathname.
+
 ## Consequences
 
 **Good.** Inline citations from any section resolve to a sibling of that
