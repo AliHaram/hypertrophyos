@@ -3,6 +3,7 @@ import {
   type Phase,
   CURRENT_PHASE,
   overdueOrphans,
+  staleRegistrations,
 } from "@/lib/content/orphaned-terms";
 
 import { CITATIONS } from "./citations";
@@ -16,7 +17,7 @@ import {
 /**
  * The evidence-integrity checker.
  *
- * Seven rules, all of which fail the build rather than emitting a warning. The
+ * Eight rules, all of which fail the build rather than emitting a warning. The
  * distinction matters: a warning in a content pipeline is a claim that ships
  * unlabelled while somebody means to get to it. These run inside the content
  * loader, which runs during `next build`, so a violation stops the build.
@@ -32,6 +33,7 @@ export type IntegrityRuleId =
   | "citation-must-resolve"
   | "term-must-be-unique"
   | "orphaned-term-past-deadline"
+  | "orphan-registration-is-stale"
   | "exercise-requires-graded-fields";
 
 export interface IntegrityViolation {
@@ -54,6 +56,8 @@ export const INTEGRITY_RULES: Record<IntegrityRuleId, string> = {
     "A glossary term must resolve to exactly one concept.",
   "orphaned-term-past-deadline":
     "A registered orphaned term must have a concept by the end of its phase.",
+  "orphan-registration-is-stale":
+    "A registered orphaned term that now has a concept must be removed from the register.",
   "exercise-requires-graded-fields":
     "Every exercise must carry prime mover, involvement coding, resistance profile, failure protocol, and SFR — each with an evidence grade.",
 };
@@ -177,6 +181,10 @@ export function checkTermUniqueness(
 
 // ---------------------------------------------------------------------------
 // Rule 6: orphaned terms expire
+// Rule 8: and registrations they satisfy are removed
+//
+// Numbered 8 rather than 6b because the rule ids are a flat set; it lives here
+// because reading it apart from rule 6 would make neither of them make sense.
 // ---------------------------------------------------------------------------
 
 export function checkOrphanedTerms(
@@ -190,6 +198,27 @@ export function checkOrphanedTerms(
       message: `registered to resolve by ${orphan.resolveBy} and still has no concept (${orphan.reason})`,
     }),
   );
+}
+
+/**
+ * The other half of the deadline rule: registrations that have been satisfied.
+ *
+ * `staleRegistrations` was written alongside `overdueOrphans` and then never
+ * called, which left the register half-enforced — it could tell you a promise
+ * was overdue but not that one had been kept. That gap is invisible until the
+ * first orphan actually resolves, and its own doc comment names the cost: a
+ * stale entry is noise that makes the real deadlines easier to ignore.
+ *
+ * Wired in as `resistance-profile` lands, which is the first time it can fire.
+ */
+export function checkStaleOrphanRegistrations(
+  resolvedTerms: ReadonlySet<string>,
+): IntegrityViolation[] {
+  return staleRegistrations(resolvedTerms).map((orphan: OrphanedTerm) => ({
+    rule: "orphan-registration-is-stale" as const,
+    subject: orphan.term,
+    message: `a concept now resolves this, so its entry in ORPHANED_TERMS is stale and should be deleted (was due ${orphan.resolveBy})`,
+  }));
 }
 
 // ---------------------------------------------------------------------------

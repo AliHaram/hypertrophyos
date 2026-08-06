@@ -9,6 +9,7 @@ import { resolveCitations } from "@/lib/evidence/citations";
 import {
   assertNoViolations,
   checkOrphanedTerms,
+  checkStaleOrphanRegistrations,
   checkTermUniqueness,
 } from "@/lib/evidence/integrity";
 import type { Citation } from "@/lib/evidence/types";
@@ -76,6 +77,7 @@ function runIntegrityChecks(concepts: Concept[]): void {
       })),
     ),
     ...checkOrphanedTerms(resolvedTerms),
+    ...checkStaleOrphanRegistrations(resolvedTerms),
   ]);
 }
 

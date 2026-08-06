@@ -9,6 +9,7 @@ import {
   checkExercise,
   checkGradedSubject,
   checkOrphanedTerms,
+  checkStaleOrphanRegistrations,
   checkTermUniqueness,
   formatViolations,
 } from "./integrity";
@@ -215,6 +216,40 @@ describe("rule 6 — orphaned terms expire", () => {
   });
 });
 
+describe("rule 8 — orphan registrations do not go stale", () => {
+  it("does not fire while the term is genuinely unresolved", () => {
+    expect(checkStaleOrphanRegistrations(new Set())).toHaveLength(0);
+  });
+
+  it("fires once a concept resolves a registered term", () => {
+    const violations = checkStaleOrphanRegistrations(
+      new Set(["resistance profile"]),
+    );
+
+    expect(violations).toHaveLength(1);
+    expect(violations[0]?.rule).toBe("orphan-registration-is-stale");
+    expect(violations[0]?.subject).toBe("resistance profile");
+  });
+
+  it("says to delete the entry rather than leaving it satisfied", () => {
+    const violations = checkStaleOrphanRegistrations(
+      new Set(["resistance profile"]),
+    );
+
+    expect(violations[0]?.message).toMatch(/stale and should be deleted/);
+  });
+
+  it("fires independently of the phase deadline", () => {
+    // The point of the pair: rule 6 asks whether a promise is overdue, rule 8
+    // asks whether it has been kept. A term resolved early is stale
+    // immediately, not at its deadline.
+    const resolved = new Set(["overload debt"]);
+
+    expect(checkOrphanedTerms(resolved, "phase-1")).toHaveLength(0);
+    expect(checkStaleOrphanRegistrations(resolved)).toHaveLength(1);
+  });
+});
+
 describe("rule 7 — exercises carry graded evidence-bearing fields", () => {
   function validExercise(): CheckableExercise {
     return {
@@ -340,7 +375,7 @@ describe("reporting", () => {
   it("documents every rule id it can emit", () => {
     const ids = Object.keys(INTEGRITY_RULES);
 
-    expect(ids).toHaveLength(7);
+    expect(ids).toHaveLength(8);
     for (const description of Object.values(INTEGRITY_RULES)) {
       expect(description.length).toBeGreaterThan(20);
     }

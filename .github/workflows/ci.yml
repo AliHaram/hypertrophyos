@@ -51,7 +51,7 @@ jobs:
         run: pnpm design:check
 
       # --- Build -----------------------------------------------------------
-      # The seven evidence-integrity rules run inside the content loader, so a
+      # The eight evidence-integrity rules run inside the content loader, so a
       # violation fails here rather than shipping an unlabelled claim.
       - name: Build
         run: pnpm build
