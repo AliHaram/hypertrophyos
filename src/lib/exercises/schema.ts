@@ -14,12 +14,21 @@ import { involvementSchema } from "@/lib/training/involvement";
 
 export const RESISTANCE_PROFILE_SAMPLES = 11;
 
-export const peakPositionSchema = z.enum([
+/**
+ * Peak positions in range order — lengthened end first, then the special case.
+ *
+ * Declared as an array rather than read back off the Zod enum so the display
+ * order is stated rather than inherited. `even` sits last because it is not a
+ * point on the range at all; it is the absence of a peak.
+ */
+export const PEAK_POSITIONS = [
   "stretched",
   "mid-range",
   "shortened",
   "even",
-]);
+] as const;
+
+export const peakPositionSchema = z.enum(PEAK_POSITIONS);
 export type PeakPosition = z.infer<typeof peakPositionSchema>;
 
 export const muscleLengthSchema = z.enum(["lengthened", "mid", "shortened"]);

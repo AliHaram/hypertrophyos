@@ -172,10 +172,10 @@ describe("rule 5 — a glossary term resolves to one concept", () => {
 });
 
 describe("rule 6 — orphaned terms expire", () => {
-  it("fires on a term registered for this phase that is still unresolved", () => {
-    const violations = checkOrphanedTerms(new Set(), "phase-2");
+  it("fires on a term whose deadline has arrived and is still unresolved", () => {
+    const violations = checkOrphanedTerms(new Set(), "phase-3");
 
-    expect(violations.some((v) => v.subject === "resistance profile")).toBe(
+    expect(violations.some((v) => v.subject === "proximity to failure")).toBe(
       true,
     );
     expect(violations[0]?.rule).toBe("orphaned-term-past-deadline");
@@ -183,13 +183,21 @@ describe("rule 6 — orphaned terms expire", () => {
 
   it("passes once a concept resolves the term", () => {
     const violations = checkOrphanedTerms(
-      new Set(["resistance profile"]),
-      "phase-2",
+      new Set(["proximity to failure"]),
+      "phase-3",
     );
 
-    expect(violations.some((v) => v.subject === "resistance profile")).toBe(
+    expect(violations.some((v) => v.subject === "proximity to failure")).toBe(
       false,
     );
+  });
+
+  it("has nothing outstanding at the phase the project is actually on", () => {
+    // The register and CURRENT_PHASE have to agree, and this is the assertion
+    // that catches a phase bumped ahead of the content it was promising. The
+    // content loader enforces the same thing at build time; this fails in
+    // milliseconds instead of after a full Next build.
+    expect(checkOrphanedTerms(new Set())).toEqual([]);
   });
 
   it("does not fire on a term whose deadline is still in the future", () => {
@@ -223,17 +231,17 @@ describe("rule 8 — orphan registrations do not go stale", () => {
 
   it("fires once a concept resolves a registered term", () => {
     const violations = checkStaleOrphanRegistrations(
-      new Set(["resistance profile"]),
+      new Set(["proximity to failure"]),
     );
 
     expect(violations).toHaveLength(1);
     expect(violations[0]?.rule).toBe("orphan-registration-is-stale");
-    expect(violations[0]?.subject).toBe("resistance profile");
+    expect(violations[0]?.subject).toBe("proximity to failure");
   });
 
   it("says to delete the entry rather than leaving it satisfied", () => {
     const violations = checkStaleOrphanRegistrations(
-      new Set(["resistance profile"]),
+      new Set(["proximity to failure"]),
     );
 
     expect(violations[0]?.message).toMatch(/stale and should be deleted/);

@@ -1,0 +1,92 @@
+---
+title: Resistance profile
+category: mechanisms
+position: 5
+evidenceGrade: mechanical-inference
+shortDefinition: How the difficulty of an exercise changes across its range of motion — where the movement is hardest, and therefore which part of the range receives the most tension. Two exercises can train the same muscle and load completely different portions of it.
+terms:
+  - resistance profile
+  - strength curve
+  - peak position
+  - resistance curve
+citations:
+  - kassiano-2023-rom
+  - kassiano-2023-gastrocnemius
+  - wolf-2025-lengthened-partials
+derivation: Torque demand at a joint is the resisting force times its moment arm about that joint. Both terms change continuously as the limb rotates — gravity holds its direction while the limb turns beneath it, so the perpendicular distance from the joint axis to the line of resistance grows and shrinks across the range. The profiles in this app are computed from that geometry for each movement, not measured on a dynamometer.
+related:
+  - mechanical-tension
+  - stimulus-to-fatigue-ratio
+---
+
+## What it is
+
+An exercise is not equally hard all the way through.
+
+Pick up a dumbbell and raise it out to the side. At the bottom, with the arm hanging, it is nearly weightless — not because the dumbbell got lighter, but because it hangs almost directly below the shoulder and has almost no leverage on it. At shoulder height the whole length of your arm is working against you, and the same dumbbell is five times harder to hold.
+
+That variation across the range is the **resistance profile**. It is a property of the exercise, not of the muscle, and it decides something the exercise's name does not tell you: which part of the range actually receives high <Term>tension</Term>.
+
+<ResistanceProfileComparison />
+
+## Where the shape comes from
+
+<Claim grade="mechanical-inference" derivation="Torque about a joint is the resisting force multiplied by its moment arm — the perpendicular distance from the joint axis to the line along which the resistance acts. Under gravity the line of resistance is vertical and fixed, while the limb rotates through it, so the moment arm varies continuously across the range even though the load on the bar never changes.">
+
+The difficulty of a position is the load times its leverage on the joint, and leverage changes as you move. A movement is hardest wherever the resistance has the longest moment arm, which is a fact about geometry rather than about the muscle.
+
+</Claim>
+
+This is why the profile is predictable from the setup. A dumbbell hangs straight down, so a dumbbell exercise is hardest where the hand is furthest horizontally from the joint. A cable pulls along its line, so a cable exercise is hardest where the limb is most perpendicular to that line. A machine is hardest wherever its designer decided, which is the entire reason cams exist.
+
+**Every profile in this app is derived, not measured.** Nobody here has put a subject on a dynamometer and recorded joint torque. Each curve comes from reasoning about the direction of the resistance and the moment arms it acts through, and that reasoning is written out on every exercise page so you can disagree with a specific curve rather than with the idea. They are graded `mechanical-inference` for exactly that reason: the logic is inspectable, and the conclusion has not been checked against a measurement.
+
+## The four cases
+
+<PeakPositionExamples />
+
+## Why it matters
+
+The profile determines where in the range the muscle is under real tension, and the evidence on where tension is most valuable points in one direction.
+
+<Claim grade="strong">
+
+Across eleven studies, full range of motion and partials performed in the **lengthened** portion of the range produced greater hypertrophy than partials performed in the shortened portion. <Cite id="kassiano-2023-rom" />
+
+</Claim>
+
+<Claim grade="strong">
+
+In a controlled trial, partial plantarflexion performed at long muscle lengths produced greater gastrocnemius hypertrophy than full range-of-motion training. <Cite id="kassiano-2023-gastrocnemius" />
+
+</Claim>
+
+That is a real and reasonably consistent finding, and it has an obvious implication: an exercise whose profile puts its peak at the stretch is doing something an exercise peaking at the contraction is not.
+
+<Uncertainty>
+
+The strong version of this — that lengthened positions are actively *better* rather than merely not worse — is less settled than it is usually presented. The most recent well-controlled trial found lengthened partials produced adaptations **similar to**, not greater than, full range of motion. <Cite id="wolf-2025-lengthened-partials" />
+
+What would change our mind: a body of trials directly comparing matched-volume training at long versus short muscle lengths in trained lifters, with hypertrophy measured at multiple sites along the muscle. Most of the current evidence compares *range of motion*, which confounds where the tension peaks with how much total work was done.
+
+</Uncertainty>
+
+The defensible reading is the weaker one. Loading the lengthened position is at least as good as the alternatives and plausibly better, the cost of preferring it is nothing, and so it is worth preferring — but it is not the settled result that the current enthusiasm for it implies.
+
+## What it means in practice
+
+**Two exercises for the same muscle are not interchangeable.** This is the single most useful consequence. If both of your chest movements peak at the stretch, you have trained one part of the range twice. The app's substitution engine matches on peak position rather than on exercise name for this reason, and shows you the trade it is making.
+
+**Pair profiles rather than duplicating them.** A stretched-peaking movement and a shortened-peaking one cover a range that neither covers alone. The exercise pages suggest complements on exactly this basis, and say so plainly when the library has none to offer.
+
+**The easy part of the range is not worth defending.** The profile shows where the load actually is. Squeezing hard at the top of a Romanian deadlift, or locking out a leg press, spends effort in the part of the rep the curve shows is nearly unloaded — it adds fatigue without adding stimulus.
+
+**Judge partials by where they sit, not by whether they are partials.** A partial performed in the loaded half of the range is a reasonable tool. The same partial performed in the unloaded half is a shorter, easier set.
+
+## Common mistakes
+
+**Reading "hardest" as "most effective".** The profile tells you where the demand peaks. It does not by itself tell you that peak is where growth is best driven — that is a separate claim, and it is the one the range-of-motion literature above is arguing about.
+
+**Assuming the muscle is longest where the exercise is hardest.** Usually true, and specifically false on movements that cross two joints. On a leg press the resistance peaks deep in the range, but rectus femoris length depends on the hip as well as the knee, so the quadriceps as a group are not maximally lengthened where the machine is hardest. This app stores those as two separate properties because they answer different questions.
+
+**Trusting the curve more than it deserves.** These are inferences from geometry. A machine with an unusual cam, or a lifter whose proportions differ from the ones assumed, will produce a different curve than the one drawn — and on cammed machines specifically, the shape is an inference about design intent rather than about a measured linkage.

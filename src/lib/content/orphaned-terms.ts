@@ -41,7 +41,7 @@ export type Phase = (typeof PHASES)[number];
  * outstanding fails the build there — which is exactly the moment you want to
  * be stopped.
  */
-export const CURRENT_PHASE: Phase = "phase-1";
+export const CURRENT_PHASE: Phase = "phase-2";
 
 export interface OrphanedTerm {
   /** The term as written in prose, lowercased for lookup. */
@@ -53,12 +53,6 @@ export interface OrphanedTerm {
 }
 
 export const ORPHANED_TERMS: readonly OrphanedTerm[] = [
-  {
-    term: "resistance profile",
-    resolveBy: "phase-2",
-    reason:
-      "Written in Phase 2 alongside the exercise library — the profile data is what the concept explains.",
-  },
   {
     term: "proximity to failure",
     resolveBy: "phase-3",

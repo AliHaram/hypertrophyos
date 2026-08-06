@@ -12,6 +12,8 @@ import { Term } from "@/components/evidence/term";
 import { Uncertainty } from "@/components/evidence/uncertainty";
 import { DoubleProgressionDemo } from "@/components/knowledge/double-progression-demo";
 import { OverloadLeversModule } from "@/components/knowledge/overload-levers-module";
+import { PeakPositionExamples } from "@/components/knowledge/peak-position-examples";
+import { ResistanceProfileComparison } from "@/components/knowledge/resistance-profile-comparison";
 
 /**
  * Everything concept MDX can use.
@@ -138,6 +140,8 @@ const components = {
   VolumeLandmarkScale,
   OverloadLeversModule,
   DoubleProgressionDemo,
+  ResistanceProfileComparison,
+  PeakPositionExamples,
 };
 
 export function ConceptBody({ source }: { source: string }) {
