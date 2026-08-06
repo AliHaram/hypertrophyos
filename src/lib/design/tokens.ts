@@ -85,10 +85,14 @@ export const NEUTRAL_STEPS: readonly NeutralStep[] = [
  * Reused from Phase 1's validated set rather than reinvented; the fourth grade
  * takes the validated blue. These are a *status* scale, not a categorical
  * palette: they always ship with a text label and a distinct gutter stroke, so
- * colour is never the only channel. That matters — measured against the
- * categorical CVD checks, green and red collapse to ΔE 3.8 under deuteranopia,
- * which is inherent to any good/bad status pair and is exactly why the
- * secondary encoding is mandatory rather than decorative.
+ * colour is never the only channel.
+ *
+ * Measured against the categorical CVD checks, green and red collapse to ΔE 3.8
+ * under deuteranopia. That is a property of the red–green axis, not of good/bad
+ * encoding — a blue–orange pair would measure cleanly. We keep green/red because
+ * the convention is read without a legend and blue is already held by
+ * `mechanical-inference`, and we carry the mandatory secondary encoding as the
+ * price. See design-principles.md §8 for the declined alternative.
  */
 export const EVIDENCE = {
   strong: { dark: "#56bd78", light: "#137d41" },

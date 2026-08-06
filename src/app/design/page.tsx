@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { DoseResponseChart } from "@/components/charts/dose-response-chart";
 import { Claim } from "@/components/evidence/claim";
 import { EvidenceChip } from "@/components/evidence/evidence-chip";
 import { Uncertainty } from "@/components/evidence/uncertainty";
@@ -339,6 +340,76 @@ export default function DesignSystemPage() {
             trustworthy thing this app does.
           </p>
         </Uncertainty>
+      </Section>
+
+      <Section title="Range control" eyebrow="Components">
+        <p className="prose-concept mb-5 max-w-prose">
+          The native <code className="font-mono text-ui-sm">input[type=range]</code>{" "}
+          restyled onto tokens. Chosen over a component-library slider because
+          the platform control already has keyboard stepping, pointer capture and
+          the right screen-reader semantics; the library version reimplements all
+          of it in 10 kB of JavaScript that has to reach the reader before the
+          control works.
+        </p>
+        <div className="max-w-sm">
+          <label htmlFor="design-range" className="eyebrow">
+            Reps in reserve
+          </label>
+          <input
+            id="design-range"
+            type="range"
+            className="range-control mt-2"
+            min={0}
+            max={5}
+            step={1}
+            defaultValue={2}
+          />
+        </div>
+      </Section>
+
+      <Section title="Disclosure" eyebrow="Components">
+        <p className="prose-concept mb-5 max-w-prose">
+          <code className="font-mono text-ui-sm">details</code> and{" "}
+          <code className="font-mono text-ui-sm">summary</code>, marker removed
+          and replaced with a chevron that rotates on open. Every figure&rsquo;s
+          data table uses this, which is what makes the table reachable before
+          hydration rather than after it.
+        </p>
+        <details className="group max-w-prose rounded-md border border-border p-4">
+          <summary className="disclosure-summary inline-flex items-center gap-1.5 font-mono text-ui-2xs uppercase tracking-eyebrow text-text-muted transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted">
+            <svg
+              viewBox="0 0 8 8"
+              className="size-2 transition-transform group-open:rotate-90"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M2 0.5 L6 4 L2 7.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Data table
+          </summary>
+          <p className="prose-concept mt-3">
+            Content, revealed. No JavaScript involved in either direction.
+          </p>
+        </details>
+      </Section>
+
+      <Section title="Static plate" eyebrow="Charts">
+        <p className="prose-concept mb-5 max-w-prose">
+          Knowledge-layer figures are journal plates: fixed data, no
+          interaction, drawn once on the server. The plot is a stretched SVG with
+          non-scaling strokes; every label is HTML positioned by percentage, so
+          type stays on the scale and stays legible at phone widths. Interactive
+          analytics in later phases will use a charting library — these do not
+          need one.
+        </p>
+        <DoseResponseChart />
       </Section>
     </main>
   );

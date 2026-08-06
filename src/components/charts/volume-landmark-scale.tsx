@@ -1,5 +1,3 @@
-"use client";
-
 import { ChartFigure } from "@/components/charts/chart-figure";
 import { LANDMARK_UNCERTAINTY } from "@/lib/training/volume";
 

@@ -22,13 +22,7 @@ const BUDGET = 180 * 1024;
  * relaxed to green is worse. Exceptions are listed here with a reason and an
  * owner so the breach stays visible in every CI run.
  */
-const EXCEPTIONS = {
-  "/knowledge/[slug]/page": {
-    limit: 320 * 1024,
-    reason:
-      "Recharts (~160 kB) is imported by three of seven concepts. next/dynamic does not split it from a Server Component — the client chunk is still attributed to the page. Real fix is a client-boundary wrapper with ssr:false, which costs the SSG'd chart markup. Tracked for Phase 3.",
-  },
-};
+const EXCEPTIONS = {};
 
 const ROOT = process.cwd();
 const APP_DIR = path.join(ROOT, ".next");

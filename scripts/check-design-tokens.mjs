@@ -11,7 +11,14 @@
  *   3. No backdrop-blur outside the overlay allowlist. Glassmorphism on cards
  *      is the single most recognisable marker of an unconsidered interface.
  *   4. No decorative gradients.
- *   5. No oversized radii on containers.
+ *   5. No malformed colour utilities — a class Tailwind does not recognise
+ *      emits nothing and the element silently inherits its parent's colour.
+ *   6. No opacity modifiers on text colours, which composite away the contrast
+ *      the token guarantees.
+ *   7. No oversized radii on containers.
+ *
+ * Rules 5 and 6 were each added after the defect they describe shipped. Both
+ * are invisible to typecheck, to the build, and to the token contrast tests.
  *
  * Run: pnpm design:check
  */
@@ -84,6 +91,26 @@ const RULES = [
       /\b(?:text|bg|border|outline|decoration|fill|stroke)-(?:text|bg|surface)-(?:strong|body|muted|raised)-[a-z]+\b/g,
     message: (m) =>
       `"${m}" is not a real utility — Tailwind emits nothing and the element inherits its parent's colour`,
+  },
+  {
+    /*
+      Opacity modifiers on text colours.
+
+      `text-muted-foreground/80` composites the muted ramp step against whatever
+      is behind it, which took paper muted text from its asserted 5.55:1 down to
+      a measured 3.64:1 — below AA, on eleven list items, invisible to the token
+      contrast tests because the token itself was never the problem. axe caught
+      it on the rendered page.
+
+      There is no half-step between body and muted, deliberately: if text needs
+      to recede, it is muted, and if muted is too quiet the ramp step is wrong.
+      Marks and hairlines are unaffected — `bg-` and `border-` may composite
+      freely, since neither carries a text threshold.
+    */
+    id: "faded-text-colour",
+    pattern: /\btext-(?:foreground|muted-foreground|text-(?:body|muted|strong)|card-foreground|primary|secondary)\/\d{1,3}\b/g,
+    message: (m) =>
+      `"${m}" composites away the contrast the token guarantees — use text-foreground or text-muted-foreground`,
   },
   {
     id: "oversized-radius",

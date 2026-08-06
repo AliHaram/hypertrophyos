@@ -102,7 +102,7 @@ export function OverloadLeversModule() {
 
         <div className="mt-5 rounded-md border border-border bg-background/60 p-4">
           <p className="eyebrow mb-2">In practice</p>
-          <p className="text-sm leading-relaxed text-foreground/90">
+          <p className="text-sm leading-relaxed text-foreground">
             {lever.worked}
           </p>
         </div>
@@ -115,7 +115,7 @@ function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="grid gap-1 sm:grid-cols-[9rem_1fr] sm:gap-4">
       <dt className="eyebrow pt-0.5">{label}</dt>
-      <dd className="text-sm leading-relaxed text-foreground/90">{value}</dd>
+      <dd className="text-sm leading-relaxed text-foreground">{value}</dd>
     </div>
   );
 }

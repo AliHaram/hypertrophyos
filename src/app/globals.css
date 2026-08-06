@@ -227,6 +227,85 @@
   }
 
   /*
+    Disclosure summaries.
+
+    The default marker is a triangle the browser draws in its own colour at its
+    own size, outside the type system. Removed in favour of an inline chevron
+    that rotates on open. Safari needs the WebKit pseudo-element as well as
+    list-style; both are still required as of 2026.
+  */
+  .disclosure-summary {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .disclosure-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /*
+    Range inputs.
+
+    The native control, restyled onto tokens. Track and thumb pseudo-elements
+    cannot be selected together — a browser that does not recognise one
+    selector discards the whole rule — so the WebKit and Gecko variants are
+    written out separately rather than grouped.
+
+    The thumb is a 16px circle inside a 20px control, which clears the 24px
+    pointer target once the input's own padding is counted.
+  */
+  .range-control {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 1.25rem;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .range-control::-webkit-slider-runnable-track {
+    height: 2px;
+    background: var(--border);
+  }
+
+  .range-control::-moz-range-track {
+    height: 2px;
+    background: var(--border);
+  }
+
+  .range-control::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    margin-top: -7px;
+    border-radius: 9999px;
+    background: var(--foreground);
+    border: 2px solid var(--background);
+  }
+
+  .range-control::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--background);
+    border-radius: 9999px;
+    background: var(--foreground);
+  }
+
+  .range-control:focus-visible {
+    outline: none;
+  }
+
+  .range-control:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid var(--text-muted);
+    outline-offset: 2px;
+  }
+
+  .range-control:focus-visible::-moz-range-thumb {
+    outline: 2px solid var(--text-muted);
+    outline-offset: 2px;
+  }
+
+  /*
     Confidence gutters.
 
     Four strokes that must stay distinct with colour removed. The double rule

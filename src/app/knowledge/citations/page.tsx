@@ -69,7 +69,7 @@ export default function CitationsPage() {
               <p className="mt-1.5 text-sm text-muted-foreground">
                 {citation.authors} ({citation.year}) · {citation.journal}
               </p>
-              <p className="mt-3 max-w-3xl border-l-2 border-border pl-4 font-prose text-prose-sm leading-relaxed text-foreground/85">
+              <p className="mt-3 max-w-3xl border-l-2 border-border pl-4 font-prose text-prose-sm leading-relaxed text-foreground">
                 {citation.keyFinding}
               </p>
 
@@ -92,7 +92,7 @@ export default function CitationsPage() {
                       <span key={concept.slug}>
                         <Link
                           href={`/knowledge/${concept.slug}`}
-                          className="text-foreground/80 hover:text-text-strong hover:underline"
+                          className="text-foreground hover:text-text-strong hover:underline"
                         >
                           {concept.title}
                         </Link>

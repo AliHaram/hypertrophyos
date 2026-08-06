@@ -130,13 +130,38 @@ WCAG AA. Body text is 12.98:1 on dark and 16.77:1 on paper; muted text is
 6.87:1 and 5.55:1. Hairlines sit at 1.28:1 and 1.41:1 — deliberately below
 text thresholds, because they are rules, not content.
 
-**The evidence palette does not pass a categorical CVD check, and this is
-known.** Measured with the palette validator, evidence-strong (green) and
+**The evidence palette does not pass a categorical CVD check, and this is a
+choice.** Measured with the palette validator, evidence-strong (green) and
 evidence-weak (red) collapse to ΔE 3.8 under deuteranopia on the dark surface,
-5.4 on paper. That is inherent to any good/bad status pair and is not fixable
-by re-stepping the hues.
+5.4 on paper.
 
-What makes it legal is that colour is never the only channel:
+This is a property of the **red–green** axis, not of good/bad encoding as such.
+The blue–yellow axis survives both deuteranopia and protanopia, which is why
+ColorBrewer recommends blue–orange for categorical work and why a
+blue–orange evidence palette would measure cleanly on the same validator.
+
+### The alternative we declined
+
+Re-hueing `strong` and `weak` onto blue and orange would pass the categorical
+check outright. We are not doing it, for two reasons:
+
+1. **Semantic convention carries real information here.** Green-means-supported
+   and red-means-poorly-supported is understood before the legend is read. A
+   blue/orange pair is separable but arbitrary — every reader has to learn which
+   end is which, every time. For a four-step scale a reader meets in passing,
+   mid-paragraph, that cost is larger than the separability gain.
+2. **Blue is already spoken for.** `mechanical-inference` holds the validated
+   blue, and `chart-1` holds it again for series. Moving `strong` onto blue
+   would collide with both.
+
+This is a trade, not an impossibility. If usage shows readers relying on hue
+despite the redundant encoding — or if the evidence grades ever appear somewhere
+the label cannot follow — the blue–orange palette is the fix, and re-stepping
+the hues is a token change, not a redesign.
+
+### Why the current palette is nonetheless conformant
+
+Colour is never the only channel:
 
 - Every evidence chip carries a **text label**, always.
 - Every claim gutter carries a **distinct stroke style** — solid, dashed,
@@ -144,10 +169,10 @@ What makes it legal is that colour is never the only channel:
 - The `/design` route renders all four adjacent with saturation stripped, so
   the grayscale distinction can be checked rather than assumed.
 
-Treating this as a status scale with mandatory secondary encoding is the
-correct reading, and it is why the chips are figure-legend markers rather than
-filled badges. But the numbers are recorded here rather than hidden, because
-"it passes" would have been false.
+That satisfies WCAG 1.4.1, which requires that colour not be the sole means of
+conveying information — not that every pair be separable under simulation. The
+measured numbers are recorded here rather than hidden, because "it passes"
+would have been false.
 
 ## 9. The `/design` route is the test suite
 

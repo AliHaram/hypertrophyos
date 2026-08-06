@@ -62,7 +62,7 @@ export function CitationRef({
         <p className="mt-1.5 text-xs text-muted-foreground">
           {citation.authors} · {citation.journal}
         </p>
-        <p className="mt-3 border-t border-border pt-3 text-xs leading-relaxed text-foreground/85">
+        <p className="mt-3 border-t border-border pt-3 text-xs leading-relaxed text-foreground">
           {citation.keyFinding}
         </p>
         {url && (

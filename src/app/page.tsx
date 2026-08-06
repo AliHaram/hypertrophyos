@@ -98,7 +98,7 @@ export default function Home() {
             <li key={concept.slug}>
               <Link
                 href={`/knowledge/${concept.slug}`}
-                className="inline-flex items-center gap-2 text-sm text-foreground/85 transition-colors hover:text-text-strong"
+                className="inline-flex items-center gap-2 text-sm text-foreground transition-colors hover:text-text-strong"
               >
                 <EvidenceChip grade={concept.evidenceGrade} showLabel={false} />
                 {concept.title}

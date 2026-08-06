@@ -45,7 +45,8 @@ jobs:
         run: pnpm design:tokens:check
 
       # Arbitrary Tailwind values, prohibited typefaces, glassmorphism,
-      # decorative gradients, oversized radii.
+      # decorative gradients, malformed colour utilities, faded text colours,
+      # oversized radii.
       - name: Design system rules
         run: pnpm design:check
 
@@ -77,5 +78,9 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm build
 
+      # Every route, both surfaces, against the production build. This is the
+      # only gate that sees what the renderer actually produced — the token
+      # contrast assertions cannot tell whether a page uses the pairings they
+      # assert, or whether a class name resolved to any CSS at all.
       - name: axe on every route
         run: pnpm test:a11y

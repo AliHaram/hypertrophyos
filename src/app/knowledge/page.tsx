@@ -105,7 +105,7 @@ export default function KnowledgeIndex() {
                     {planned.map((topic) => (
                       <li
                         key={topic}
-                        className="text-sm text-muted-foreground/80"
+                        className="text-sm text-muted-foreground"
                       >
                         {topic}
                       </li>

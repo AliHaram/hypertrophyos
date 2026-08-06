@@ -93,7 +93,7 @@ export default async function ConceptPage({
                         href={url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-foreground/85 transition-colors hover:text-text-strong"
+                        className="text-foreground transition-colors hover:text-text-strong"
                       >
                         <span className="font-medium">
                           {citation.authors} ({citation.year})

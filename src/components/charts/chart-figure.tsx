@@ -1,17 +1,19 @@
-"use client";
-
-import { Table2 } from "lucide-react";
-import { type ReactNode, useId, useState } from "react";
+import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
 /**
- * Shell for every chart in the app.
+ * Shell for every figure in the knowledge layer.
  *
- * Guarantees the two things a chart must never ship without: a caption that
- * states what the reader is looking at, and a table view carrying the same
- * numbers. The table is not a fallback for failure — it is the accessible
- * path, and it is also what makes the light-mode contrast relief legitimate.
+ * Guarantees the two things a figure must never ship without: a caption that
+ * states what the reader is looking at, and a table carrying the same numbers.
+ *
+ * The table is a disclosure rather than a toggle, and the component renders on
+ * the server. It used to swap chart for table behind `useState`, which meant
+ * the "accessible path" was gated on a JavaScript bundle arriving — and that a
+ * reader could see the numbers or the shape, never both while comparing them.
+ * `<details>` is the native control for exactly this, costs nothing, and works
+ * before hydration.
  */
 export function ChartFigure({
   title,
@@ -31,9 +33,6 @@ export function ChartFigure({
   children: ReactNode;
   className?: string;
 }) {
-  const [showTable, setShowTable] = useState(false);
-  const tableId = useId();
-
   return (
     <figure
       className={cn(
@@ -41,37 +40,48 @@ export function ChartFigure({
         className,
       )}
     >
-      <figcaption className="mb-4 flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <h3 className="font-prose text-base font-semibold leading-tight text-foreground">
-            {title}
-          </h3>
-          {subtitle && (
-            <p className="mt-1 text-sm leading-snug text-muted-foreground">
-              {subtitle}
-            </p>
-          )}
-        </div>
-        <button
-          type="button"
-          onClick={() => setShowTable((open) => !open)}
-          aria-expanded={showTable}
-          aria-controls={tableId}
+      <figcaption className="mb-5">
+        <h3 className="font-prose text-base font-semibold leading-tight text-foreground">
+          {title}
+        </h3>
+        {subtitle && (
+          <p className="mt-1 text-sm leading-snug text-muted-foreground">
+            {subtitle}
+          </p>
+        )}
+      </figcaption>
+
+      {children}
+
+      <details className="group mt-5 border-t border-border/60 pt-3">
+        <summary
           className={cn(
-            "flex shrink-0 items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5",
+            "disclosure-summary inline-flex items-center gap-1.5 rounded-md",
             "font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground",
-            "transition-colors hover:border-text-muted hover:text-foreground",
+            "transition-colors hover:text-foreground",
             "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted",
           )}
         >
-          <Table2 className="size-3" aria-hidden="true" />
-          {showTable ? "Chart" : "Table"}
-        </button>
-      </figcaption>
+          <svg
+            viewBox="0 0 8 8"
+            className="size-2 transition-transform group-open:rotate-90"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M2 0.5 L6 4 L2 7.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          Data table
+        </summary>
 
-      {showTable ? (
-        <div id={tableId} className="overflow-x-auto">
-          <table className="w-full border-collapse text-sm">
+        <div className="mt-3 overflow-x-auto">
+          <table className="table-scroll w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-border">
                 {columns.map((column) => (
@@ -91,7 +101,7 @@ export function ChartFigure({
                   {row.map((cell, cellIndex) => (
                     <td
                       key={cellIndex}
-                      className="px-2 py-1.5 font-mono text-ui-sm tabular-nums text-foreground/85"
+                      className="px-2 py-1.5 font-mono text-ui-sm tabular-nums text-foreground"
                     >
                       {cell}
                     </td>
@@ -101,9 +111,7 @@ export function ChartFigure({
             </tbody>
           </table>
         </div>
-      ) : (
-        <div id={tableId}>{children}</div>
-      )}
+      </details>
 
       {source && (
         <p className="mt-4 border-t border-border/60 pt-3 text-xs leading-relaxed text-muted-foreground">

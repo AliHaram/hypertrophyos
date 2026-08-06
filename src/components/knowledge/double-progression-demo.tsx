@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
-import { Slider } from "@/components/ui/slider";
 import { nextDoubleProgression } from "@/lib/training/overload-levers";
 import { cn } from "@/lib/utils";
 
@@ -107,26 +106,37 @@ function ControlRow({
   max: number;
   onChange: (value: number) => void;
 }) {
+  const id = useId();
+
   return (
     <div>
       <div className="mb-2 flex items-baseline justify-between">
-        <label className="eyebrow">{label}</label>
-        <span className="font-mono text-sm tabular-nums text-foreground">
+        <label htmlFor={id} className="eyebrow">
+          {label}
+        </label>
+        <span
+          className="font-mono text-sm tabular-nums text-foreground"
+          aria-hidden="true"
+        >
           {value}
         </span>
       </div>
-      <Slider
-        value={[value]}
+      {/*
+        A native range input rather than a component-library slider. The
+        platform control already has keyboard stepping, touch targets, pointer
+        capture and the correct screen-reader semantics; the library version
+        reimplements all of it in JavaScript that has to be shipped. Styling is
+        the only thing it costs, and that is a stylesheet.
+      */}
+      <input
+        id={id}
+        type="range"
+        className="range-control"
+        value={value}
         min={min}
         max={max}
         step={1}
-        onValueChange={(next) => {
-          // Base UI reports a bare number for single-thumb sliders and an
-          // array for range sliders; this one is always single-thumb.
-          const resolved = Array.isArray(next) ? next[0] : next;
-          if (resolved !== undefined) onChange(resolved);
-        }}
-        aria-label={label}
+        onChange={(event) => onChange(event.currentTarget.valueAsNumber)}
       />
     </div>
   );
