@@ -39,7 +39,7 @@ function conceptRoutes(): string[] {
 const ROUTES = [
   "/",
   "/knowledge",
-  "/knowledge/citations",
+  "/citations",
   "/design",
   ...conceptRoutes(),
 ];

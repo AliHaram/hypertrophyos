@@ -65,7 +65,7 @@ export default function Home() {
           <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
         <Link
-          href="/knowledge/citations"
+          href="/citations"
           className="inline-flex min-h-11 items-center font-mono text-xs uppercase tracking-eyebrow text-muted-foreground transition-colors hover:text-foreground"
         >
           {ALL_CITATIONS.length} references

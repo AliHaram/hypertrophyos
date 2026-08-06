@@ -120,7 +120,7 @@ export default function KnowledgeIndex() {
 
       <footer className="mt-16 border-t border-border pt-8">
         <Link
-          href="/knowledge/citations"
+          href="/citations"
           className="font-mono text-xs uppercase tracking-eyebrow text-text-strong hover:underline"
         >
           Bibliography →

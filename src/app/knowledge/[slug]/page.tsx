@@ -107,7 +107,7 @@ export default async function ConceptPage({
                 })}
               </ol>
               <Link
-                href="/knowledge/citations"
+                href="/citations"
                 className="mt-4 inline-block font-mono text-ui-2xs uppercase tracking-eyebrow text-text-strong hover:underline"
               >
                 Full bibliography →
