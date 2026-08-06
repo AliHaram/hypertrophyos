@@ -4,6 +4,8 @@ import path from "node:path";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
+import { getAllExercises } from "../src/lib/exercises/library";
+
 /**
  * axe against every route, on both surfaces.
  *
@@ -36,12 +38,28 @@ function conceptRoutes(): string[] {
     .sort();
 }
 
+/**
+ * Exercise routes come from the library rather than a written list, for the
+ * same reason concept routes do: a checklist updated by hand is a checklist
+ * that silently stops covering things.
+ */
+function exerciseRoutes(): string[] {
+  return getAllExercises()
+    .map((exercise) => `/exercises/${exercise.id}`)
+    .sort();
+}
+
 const ROUTES = [
   "/",
   "/knowledge",
   "/citations",
   "/design",
+  "/exercises",
+  // The empty state is a rendered surface with its own headings and links, and
+  // it is the one view a11y sweeps normally never reach.
+  "/exercises?muscle=quadriceps&peak=shortened",
   ...conceptRoutes(),
+  ...exerciseRoutes(),
 ];
 
 test.describe("accessibility", () => {
