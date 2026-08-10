@@ -1,10 +1,10 @@
-import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ResistanceProfileChart } from "@/components/charts/resistance-profile-chart";
 import { InvolvementTable } from "@/components/exercises/involvement-table";
+import { Breadcrumbs } from "@/components/shell/breadcrumbs";
 import { conceptDependencies } from "@/lib/exercises/concept-links";
 import { getAllExercises, getExercise, primeMoverOf } from "@/lib/exercises/library";
 import { muscleName } from "@/lib/exercises/muscles";
@@ -58,13 +58,7 @@ export default async function ExercisePage({
 
   return (
     <main id="main" className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-16">
-      <Link
-        href="/exercises"
-        className="eyebrow inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
-      >
-        <ArrowLeft className="size-3" aria-hidden="true" />
-        Exercises
-      </Link>
+      <Breadcrumbs pathname="/exercises/[slug]" leafLabel={exercise.name} />
 
       <header className="mt-6 border-b border-border pb-8">
         <p className="eyebrow">{exercise.equipment}</p>

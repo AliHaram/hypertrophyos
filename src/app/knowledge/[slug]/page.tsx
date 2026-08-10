@@ -1,9 +1,9 @@
-import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { EvidenceChip } from "@/components/evidence/evidence-chip";
+import { Breadcrumbs } from "@/components/shell/breadcrumbs";
 import { ConceptBody } from "@/components/knowledge/mdx";
 import {
   getAllConcepts,
@@ -49,16 +49,13 @@ export default async function ConceptPage({
 
   return (
     <main id="main" className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-16">
-      <Link
-        href="/knowledge"
-        className="eyebrow inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
-      >
-        <ArrowLeft className="size-3" aria-hidden="true" />
-        Knowledge
-      </Link>
+      <Breadcrumbs
+        pathname="/knowledge/[slug]"
+        leafLabel={concept.title}
+        interstitial={CATEGORY_META[concept.category].label}
+      />
 
       <header className="mt-6 border-b border-border pb-8">
-        <p className="eyebrow">{CATEGORY_META[concept.category].label}</p>
         <h1 className="mt-2 font-prose text-4xl font-semibold tracking-tight sm:text-5xl">
           {concept.title}
         </h1>

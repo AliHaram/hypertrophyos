@@ -46,6 +46,57 @@ if (!fs.existsSync(APP_DIR)) {
   process.exit(1);
 }
 
+/**
+ * Refuse to measure anything but a clean production build.
+ *
+ * A dev server writes into the same `.next` directory with completely different
+ * chunking, and the resulting numbers are neither right nor obviously wrong —
+ * a stray `next dev` produced a 472 kB reading for `/layout` against a real
+ * value of 141 kB. That was caught by luck and a rebuild. The next one would
+ * have landed in a report with nothing to distinguish it from a real
+ * regression, which is the worst property a measurement can have.
+ *
+ * The precondition was briefly written down as "remember to build first". That
+ * is precisely what ADR 0006 says a gate is for: a precondition living in
+ * someone's memory is not enforced, it is merely hoped for.
+ *
+ * Markers, verified empirically against both build modes:
+ *   - `BUILD_ID` is written by `next build` and absent in dev.
+ *   - `static/development/` is written by `next dev` and absent in a
+ *     production build. Its presence means the tree is contaminated even if
+ *     the production manifests are also there.
+ */
+function assertCleanProductionBuild() {
+  const problems = [];
+
+  if (!fs.existsSync(path.join(APP_DIR, "BUILD_ID"))) {
+    problems.push(
+      "no .next/BUILD_ID — this is not a production build (`next build` writes it; `next dev` does not).",
+    );
+  }
+  if (!fs.existsSync(path.join(APP_DIR, "required-server-files.json"))) {
+    problems.push(
+      "no .next/required-server-files.json — the production build did not complete.",
+    );
+  }
+  if (fs.existsSync(path.join(APP_DIR, "static", "development"))) {
+    problems.push(
+      "found .next/static/development — a dev server has written into this tree, so the chunking is not what ships.",
+    );
+  }
+
+  if (problems.length > 0) {
+    console.error("Refusing to measure this build:\n");
+    for (const problem of problems) console.error(`  ${problem}`);
+    console.error(
+      "\nStop any `next dev` for this project, then:\n  rm -rf .next && pnpm build && pnpm budget:check\n",
+    );
+    process.exit(1);
+  }
+}
+
+assertCleanProductionBuild();
+
 const manifestPath = path.join(APP_DIR, "app-build-manifest.json");
 if (!fs.existsSync(manifestPath)) {
   console.error(`Missing ${path.relative(ROOT, manifestPath)}.`);

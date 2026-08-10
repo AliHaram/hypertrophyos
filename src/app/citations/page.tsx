@@ -1,7 +1,8 @@
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Breadcrumbs } from "@/components/shell/breadcrumbs";
 import { getCitationBacklinks } from "@/lib/content/concepts";
 import { ALL_CITATIONS } from "@/lib/evidence/citations";
 import { citationUrl } from "@/lib/evidence/types";
@@ -18,13 +19,7 @@ export default function CitationsPage() {
 
   return (
     <main id="main" className="mx-auto max-w-4xl px-5 py-10 sm:px-8 sm:py-16">
-      <Link
-        href="/knowledge"
-        className="eyebrow inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
-      >
-        <ArrowLeft className="size-3" aria-hidden="true" />
-        Knowledge
-      </Link>
+      <Breadcrumbs pathname="/citations" />
 
       <header className="mt-6 border-b border-border pb-8">
         <h1 className="font-prose text-4xl font-semibold tracking-tight sm:text-5xl">

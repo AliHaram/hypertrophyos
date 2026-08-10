@@ -1,24 +1,16 @@
-import { SurfaceShell } from "@/components/surface";
+import { AppShell } from "@/components/shell/app-shell";
 import { routeSurface } from "@/lib/design/surface";
 
 /**
- * The bibliography reads on paper.
+ * The shell wraps this section, and applies its surface.
  *
- * Moving out of `/knowledge` cost it the knowledge layer's surface, and a
- * bibliography is long-form reading — it belongs in the same register as the
- * concepts that cite it, not on the logger's dark surface. See
- * docs/adr/0005-citations-are-shared-infrastructure.md.
- *
- * Resolved through `routeSurface` rather than hardcoded, so `ROUTE_SURFACES`
- * is the thing that decides. A declaration nothing reads is how the previous
- * prefix-matching bug survived unnoticed.
+ * The surface is resolved through `routeSurface` so `ROUTE_SURFACES` stays the
+ * single place a route's surface is decided.
  */
-export default function CitationsLayout({
+export default function SectionLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <SurfaceShell surface={routeSurface("/citations")}>{children}</SurfaceShell>
-  );
+  return <AppShell surface={routeSurface("/citations")}>{children}</AppShell>;
 }

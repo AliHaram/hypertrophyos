@@ -18,8 +18,39 @@ export default function Home() {
   const concepts = getAllConcepts();
 
   return (
-    <main id="main" className="mx-auto max-w-5xl px-5 py-14 sm:px-8 sm:py-24">
-      <p className="eyebrow">HypertrophyOS</p>
+    <>
+      {/*
+        The landing page opts out of the app shell and carries its own bar.
+        A specimen page should not open behind the product's chrome — the first
+        thing on screen is the argument, not a navigation rail.
+      */}
+      <nav
+        aria-label="Primary"
+        className="border-b border-border"
+      >
+        <div className="mx-auto flex max-w-5xl items-center gap-6 px-5 py-4 sm:px-8">
+          <span className="font-mono text-ui-2xs uppercase tracking-eyebrow text-text-strong">
+            HypertrophyOS
+          </span>
+          <div className="ml-auto flex items-center gap-5">
+            <Link
+              href="/knowledge"
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Knowledge
+            </Link>
+            <Link
+              href="/exercises"
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Exercises
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      <main id="main" className="mx-auto max-w-5xl px-5 py-14 sm:px-8 sm:py-24">
+        <p className="eyebrow">HypertrophyOS</p>
 
       <h1 className="mt-4 max-w-3xl font-prose text-4xl font-semibold tracking-tight sm:text-6xl">
         A training system that tells you what to do today, and why it thinks so.
@@ -105,9 +136,10 @@ export default function Home() {
               </Link>
             </li>
           ))}
-        </ul>
-      </section>
-    </main>
+          </ul>
+        </section>
+      </main>
+    </>
   );
 }
 
