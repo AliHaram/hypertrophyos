@@ -57,6 +57,12 @@ jobs:
       - name: Design system rules
         run: pnpm design:check
 
+      # The orphan register, the bundle-budget exceptions and @reserved exports
+      # all defer work by naming a phase. TypeScript covers the first; this
+      # covers the two that are strings a compiler never reads.
+      - name: Declared exceptions name a real phase
+        run: pnpm phases:check
+
       # --- Build -----------------------------------------------------------
       # The eight evidence-integrity rules run inside the content loader, so a
       # violation fails here rather than shipping an unlabelled claim.

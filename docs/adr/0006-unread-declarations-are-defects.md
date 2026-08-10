@@ -52,6 +52,48 @@ This required turning on the type-aware project service, which `next/typescript`
 does not configure — that costs a slower lint and buys a family of bugs that
 tests catch only by coincidence.
 
+### The rule's one hit was a false alarm, and that is the important part
+
+Enabling it flagged exactly one existing line, in the exercise index:
+
+```ts
+const active = Boolean(filters.muscle || filters.equipment || filters.peak);
+```
+
+**Here `||` was correct and `??` would have been a bug.** The values are
+`string | undefined`, and `?muscle=` — an empty param — must read as *no filter
+set*. `||` treats `""` as absent, which is the intended behaviour. `??` treats
+it as present: `"" ?? undefined ?? "quads"` evaluates to `""`, so a blank param
+would have counted as an active filter and the page would have offered to clear
+a filter that was doing nothing.
+
+Applying the rule mechanically would have shipped a real defect **while looking
+like the rule was helping** — the diff would have been one operator, green
+across every gate, and defensible in review by pointing at the lint rule.
+
+The fix was neither operator. Blanks are normalised at the boundary:
+
+```ts
+function readParam(value: string | string[] | undefined): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  return trimmed === "" ? undefined : trimmed;
+}
+
+const active = [filters.muscle, filters.equipment, filters.peak].some(Boolean);
+```
+
+Now `?muscle=` and no `muscle` at all are the same value before anything
+downstream has to decide, and the behaviour does not depend on which operator's
+edge semantics the next reader happens to remember.
+
+**The general point, which is why this is recorded rather than left in a commit
+message:** a lint rule encodes what is usually right. When one fires on a line
+that is deliberately doing the unusual thing, the answer is rarely to obey it
+and rarely to suppress it — it is to remove the reader's need to know the edge
+case at all. A gate that is followed without reading is not better than no gate;
+it is a faster way to be wrong.
+
 The general rule, stated so it is not rediscovered a fourth time:
 
 > **When a defect turns out to be an instance of a class, close the class with a
@@ -99,6 +141,37 @@ and re-exporting it is one keyword at the moment something actually reads it.
 The alternative — keeping exports open against speculative future use — is how
 the three defects above got written in the first place.
 
-**Verification.** The gate was checked by planting an unused export and
-confirming a non-zero exit, because a gate that passes but cannot fail is
-precisely the defect this ADR is about.
+**A blind spot found by asking, not by the run being quiet.** `src/db` is
+excluded from unused-export analysis and now says so in `knip.jsonc`.
+`db/schema/index.ts` is an `export *` barrel consumed as `import * as schema`,
+which is exactly the namespace Drizzle needs — and a namespace import marks
+every export in the tree as used by construction. A planted export in
+`db/schema/exercises.ts` went unflagged with the Drizzle plugin both on and off,
+so this is a property of the barrel rather than of the plugin. It is listed as a
+declared blind spot instead of being left to look covered, because "the run was
+quiet" is not evidence that coverage is intact.
+
+## Proof of failure is part of a gate
+
+A gate that has only ever been observed passing is indistinguishable from one
+whose rule silently stopped matching. Every gate in this repo therefore has to
+be demonstrated failing, and that demonstration has to be repeatable rather than
+a thing someone did once at a terminal.
+
+| Gate | Proof of failure |
+|---|---|
+| Evidence integrity (8 rules) | `integrity.test.ts` — firing and near-miss per rule |
+| Design system (7 rules) | `design-rules.test.ts` — firing and near-miss per rule |
+| Phase references (3 cases) | `phase-references.test.ts` |
+| Unused exports | Planted export, verified non-zero exit |
+| Token freshness | Planted stale CSS, verified non-zero exit |
+| Bundle budget | Planted over-budget limit, verified non-zero exit |
+
+The first three are permanent, because their rules are pattern-matching and a
+pattern can rot silently. The last three are one-line comparisons whose failure
+mode is a wrong exit code, and a test for those would restate the
+implementation — those are verified by probe and recorded here.
+
+`design-rules.mjs` and `phase-references.mjs` exist purely to make this possible:
+the rules were extracted from their scripts so they could be imported and
+exercised, leaving the scripts as the filesystem walk and the exit code.

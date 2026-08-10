@@ -21,6 +21,20 @@ const BUDGET = 180 * 1024;
  * A gate that is permanently red is a gate nobody reads, and a gate quietly
  * relaxed to green is worse. Exceptions are listed here with a reason and an
  * owner so the breach stays visible in every CI run.
+ *
+ * **Every entry must name the phase the breach is expected to close in**, from
+ * the vocabulary in `src/lib/phases.ts`. That is the same rule the orphaned-term
+ * register and `@reserved` exports follow, and
+ * `scripts/check-phase-references.mjs` fails the build on an entry that omits
+ * the phase or names one that does not exist. An exception with no deadline is
+ * not an exception, it is a lowered budget.
+ *
+ *   "/some/route/page": {
+ *     limit: 200 * 1024,
+ *     phase: "phase-4",
+ *     reason: "...",
+ *     owner: "...",
+ *   }
  */
 const EXCEPTIONS = {};
 

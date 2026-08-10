@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "deadcode:check": "knip",
+    "phases:check": "node scripts/check-phase-references.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

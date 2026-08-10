@@ -14,15 +14,14 @@
  * that hides it.
  */
 
-const PHASES = [
-  "phase-1",
-  "phase-2",
-  "phase-3",
-  "phase-4",
-  "phase-5",
-  "phase-6",
-] as const;
-export type Phase = (typeof PHASES)[number];
+/*
+  The phase vocabulary is shared, not local — see src/lib/phases.ts. The orphan
+  register was the first place this convention appeared; it is now the third,
+  so the list lives in one module and all three consumers read it from there.
+*/
+import { PHASES, type Phase } from "@/lib/phases";
+
+export type { Phase };
 
 /**
  * The last phase that has *shipped* — not the one in progress.

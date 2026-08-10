@@ -1,0 +1,84 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+
+  "entry": [
+    "src/app/**/{page,layout,not-found,error,loading,template,default}.tsx",
+    "scripts/*.{ts,mjs}",
+    "e2e/**/*.spec.ts",
+    "**/*.test.ts",
+
+    /*
+      tokens.ts is a real entry point, not an exception.
+
+      `generate-tokens.mjs` consumes roughly fifteen of its exports through a
+      `tsx -e` string, which no static analyser can follow. Declaring it as an
+      entry states what is true; adding its exports to an ignore list would have
+      stated something false and hidden the same fact.
+    */
+    "src/lib/design/tokens.ts!"
+  ],
+
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.{ts,mjs}", "e2e/**/*.ts"],
+
+  /*
+    DECLARED BLIND SPOT — src/db is not covered by unused-export analysis.
+
+    `db/schema/index.ts` is an `export *` barrel and `db/index.ts` consumes it
+    as `import * as schema`, because that namespace is exactly what Drizzle needs
+    to build its query API. A namespace import marks every export in the tree as
+    used by construction, so knip cannot distinguish a live table from a dead one
+    here and reports the whole tree clean either way.
+
+    Verified with a planted export: it is not flagged with the Drizzle plugin on
+    or off, so this is a property of the barrel, not of the plugin.
+
+    Deliberately NOT added to `ignore` below — knip correctly points out that
+    would be a no-op, since nothing there is ever reported anyway. Writing a
+    redundant ignore to look thorough would be config that lies. The gap is
+    recorded here and in ADR 0006 instead, because "the run was quiet" is not
+    evidence that coverage is intact.
+  */
+
+  "ignore": [
+    // Vendored shadcn primitives. Retokenized as each is touched; not ours to prune.
+    "src/components/ui/**"
+  ],
+
+  "ignoreDependencies": [
+    "tw-animate-css",
+    "tailwindcss",
+    "eslint-config-next",
+    // Consumed only by the vendored primitives under src/components/ui, ignored above.
+    "class-variance-authority",
+    "shadcn"
+  ],
+
+  /*
+    Exports written ahead of their consumer carry `@reserved phase-N`.
+
+    The tag must name a phase, and `scripts/check-phase-references.mjs` fails if
+    that phase is not in the PHASES union. Same discipline as the orphaned-term
+    register and the bundle budget: an exception is declared, dated, and
+    greppable, or it is not an exception.
+  */
+  "tags": ["-@reserved"],
+
+  /*
+    The Drizzle plugin loads drizzle.config.ts, which throws without a
+    DATABASE_URL. It printed two ERROR lines on every green run, and a gate that
+    cries wolf gets switched off. Disabling it costs nothing: src/db is a
+    declared blind spot above for an unrelated and more fundamental reason.
+  */
+  "drizzle": false,
+
+  "rules": {
+    "files": "error",
+    "exports": "error",
+    "types": "error",
+    "duplicates": "error",
+    "dependencies": "error",
+    "unlisted": "error",
+    "binaries": "warn",
+    "enumMembers": "off"
+  }
+}
