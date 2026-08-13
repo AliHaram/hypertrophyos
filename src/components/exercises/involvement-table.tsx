@@ -43,7 +43,13 @@ export function InvolvementTable({ exercise }: { exercise: Exercise }) {
 
   return (
     <div>
-      <div className="overflow-x-auto">
+      {/*
+        `tabIndex` so a keyboard user can scroll this. A container that scrolls
+        horizontally but cannot be tabbed to is unreachable content at narrow
+        widths — invisible to a desktop-only axe sweep, which is why it survived
+        until the 375px run.
+      */}
+      <div className="overflow-x-auto" tabIndex={0}>
         <table className="table-scroll w-full border-collapse text-sm">
           <caption className="sr-only">
             Muscles trained by {exercise.name}, their involvement tier, and the

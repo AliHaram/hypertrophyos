@@ -97,6 +97,27 @@ export const RULES = [
       `"${m}" composites away the contrast the token guarantees — use text-foreground or text-muted-foreground`,
   },
   {
+    /*
+      One page width, declared once.
+
+      Five routes carried three different `max-w` values and the nav bar a
+      fourth, so the content's left edge moved as you navigated and never lined
+      up with the bar above it. The width now lives in `components/shell/page`
+      and nothing else declares one.
+
+      `mx-auto max-w-*` is the page-container idiom specifically, which is why
+      this matches the pair rather than `max-w-*` alone: a lede constrained to
+      `max-w-2xl` without `mx-auto` is a reading measure, not layout, and those
+      are none of this rule's business.
+    */
+    id: "raw-page-container",
+    pattern: /\bmx-auto\s+(?:w-full\s+)?max-w-[a-z0-9]+/g,
+    message: (m) =>
+      `"${m}" declares its own page width — use <Page> or PAGE_CONTAINER from components/shell/page so every route shares one left edge`,
+    // Only route files. Components legitimately centre things inside a page.
+    appliesTo: ["src/app/"],
+  },
+  {
     id: "oversized-radius",
     pattern: /\brounded-(?:2xl|3xl|full)\b/g,
     message: (m) =>
@@ -133,6 +154,9 @@ export function scanSource(relative, source) {
 
   for (const rule of RULES) {
     if (rule.allowlist && isAllowed(normalised, rule.allowlist)) continue;
+    // `appliesTo` is the inverse of `allowlist`: the rule is scoped to these
+    // paths and silent everywhere else.
+    if (rule.appliesTo && !isAllowed(normalised, rule.appliesTo)) continue;
 
     lines.forEach((line, index) => {
       // Skip comment lines — rules are discussed in prose throughout this repo.

@@ -15,6 +15,7 @@ import {
   substitutesFor,
 } from "@/lib/exercises/substitutions";
 import { cn } from "@/lib/utils";
+import { Page } from "@/components/shell/page";
 
 export function generateStaticParams() {
   return getAllExercises().map((exercise) => ({ slug: exercise.id }));
@@ -57,7 +58,7 @@ export default async function ExercisePage({
   const dependencies = conceptDependencies();
 
   return (
-    <main id="main" className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-16">
+    <Page>
       <Breadcrumbs pathname="/exercises/[slug]" leafLabel={exercise.name} />
 
       <header className="mt-6 border-b border-border pb-8">
@@ -205,7 +206,7 @@ export default async function ExercisePage({
           </section>
         </aside>
       </div>
-    </main>
+    </Page>
   );
 }
 

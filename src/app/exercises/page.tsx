@@ -11,6 +11,7 @@ import {
   type PeakPosition,
 } from "@/lib/exercises/schema";
 import { cn } from "@/lib/utils";
+import { Page } from "@/components/shell/page";
 
 export const metadata: Metadata = {
   title: "Exercises",
@@ -107,7 +108,7 @@ export default async function ExercisesIndex({
   ].sort((a, b) => muscleName(a).localeCompare(muscleName(b)));
 
   return (
-    <main id="main" className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-16">
+    <Page>
       <header className="border-b border-border pb-8">
         <p className="eyebrow">The exercise library</p>
         <h1 className="mt-2 font-prose text-4xl font-semibold tracking-tight sm:text-5xl">
@@ -122,11 +123,18 @@ export default async function ExercisesIndex({
       </header>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[13rem_minmax(0,1fr)]">
-        <FilterRail
-          filters={filters}
-          primeMovers={primeMovers}
-          active={active}
-        />
+        {/*
+          Desktop only. The mobile copy lives after the list — see below.
+          `hidden` is display:none, so exactly one of the two is in the
+          accessibility tree at any width and there is no duplicate landmark.
+        */}
+        <div className="hidden lg:block">
+          <FilterRail
+            filters={filters}
+            primeMovers={primeMovers}
+            active={active}
+          />
+        </div>
 
         <div>
           <p className="font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground">
@@ -144,9 +152,31 @@ export default async function ExercisesIndex({
           ) : (
             <EmptyState filters={filters} />
           )}
+
+          {/*
+            On a phone the filters sat above the list, so reaching the first
+            exercise meant scrolling past thirteen filter links. Here they come
+            after it and start closed: a native <details>, so it costs no
+            JavaScript and works before hydration.
+          */}
+          <details className="mt-10 border-t border-border pt-4 lg:hidden">
+            <summary className="disclosure-summary inline-flex min-h-11 items-center gap-2 rounded-xs font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted">
+              Filter
+              {active && (
+                <span className="text-text-strong">· {visible.length} shown</span>
+              )}
+            </summary>
+            <div className="mt-4">
+              <FilterRail
+                filters={filters}
+                primeMovers={primeMovers}
+                active={active}
+              />
+            </div>
+          </details>
         </div>
       </div>
-    </main>
+    </Page>
   );
 }
 

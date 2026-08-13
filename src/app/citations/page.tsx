@@ -6,6 +6,7 @@ import { Breadcrumbs } from "@/components/shell/breadcrumbs";
 import { getCitationBacklinks } from "@/lib/content/concepts";
 import { ALL_CITATIONS } from "@/lib/evidence/citations";
 import { citationUrl } from "@/lib/evidence/types";
+import { Page } from "@/components/shell/page";
 
 export const metadata: Metadata = {
   title: "Bibliography",
@@ -18,7 +19,7 @@ export default function CitationsPage() {
   const sorted = [...ALL_CITATIONS].sort((a, b) => b.year - a.year);
 
   return (
-    <main id="main" className="mx-auto max-w-4xl px-5 py-10 sm:px-8 sm:py-16">
+    <Page>
       <Breadcrumbs pathname="/citations" />
 
       <header className="mt-6 border-b border-border pb-8">
@@ -101,6 +102,6 @@ export default function CitationsPage() {
           );
         })}
       </ol>
-    </main>
+    </Page>
   );
 }

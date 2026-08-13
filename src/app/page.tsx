@@ -1,9 +1,17 @@
 import { ArrowRight } from "lucide-react";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
 import { EvidenceChip } from "@/components/evidence/evidence-chip";
+import { PAGE_CONTAINER, Page } from "@/components/shell/page";
 import { getAllConcepts } from "@/lib/content/concepts";
+import {
+  LANDING_SURFACE,
+  SURFACE_COOKIE,
+  resolveSurface,
+} from "@/lib/design/surface";
 import { ALL_CITATIONS } from "@/lib/evidence/citations";
+import { cn } from "@/lib/utils";
 
 /**
  * The hero is the evidence system, demonstrated on itself.
@@ -14,21 +22,26 @@ import { ALL_CITATIONS } from "@/lib/evidence/citations";
  * uncertainty" — and asserting that in marketing copy would be less
  * convincing than simply doing it above the fold.
  */
-export default function Home() {
+export default async function Home() {
   const concepts = getAllConcepts();
+  // The landing page is not inside a section layout, so it applies its own
+  // surface. Without this, `LANDING_SURFACE` was a declaration nothing read and
+  // the page rendered dark while the surface table said light.
+  const override = (await cookies()).get(SURFACE_COOKIE)?.value;
+  const surface = resolveSurface(override, LANDING_SURFACE);
 
   return (
-    <>
+    <div
+      data-surface={surface}
+      className="min-h-screen bg-background text-foreground"
+    >
       {/*
         The landing page opts out of the app shell and carries its own bar.
         A specimen page should not open behind the product's chrome — the first
         thing on screen is the argument, not a navigation rail.
       */}
-      <nav
-        aria-label="Primary"
-        className="border-b border-border"
-      >
-        <div className="mx-auto flex max-w-5xl items-center gap-6 px-5 py-4 sm:px-8">
+      <nav aria-label="Primary" className="border-b border-border">
+        <div className={cn(PAGE_CONTAINER, "flex items-center gap-6 py-4")}>
           <span className="font-mono text-ui-2xs uppercase tracking-eyebrow text-text-strong">
             HypertrophyOS
           </span>
@@ -49,9 +62,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <main id="main" className="mx-auto max-w-5xl px-5 py-14 sm:px-8 sm:py-24">
-        <p className="eyebrow">HypertrophyOS</p>
-
+      <Page className="py-14 sm:py-24">
       <h1 className="mt-4 max-w-3xl font-prose text-4xl font-semibold tracking-tight sm:text-6xl">
         A training system that tells you what to do today, and why it thinks so.
       </h1>
@@ -138,8 +149,8 @@ export default function Home() {
           ))}
           </ul>
         </section>
-      </main>
-    </>
+      </Page>
+    </div>
   );
 }
 

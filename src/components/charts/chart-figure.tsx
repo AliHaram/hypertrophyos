@@ -80,7 +80,7 @@ export function ChartFigure({
           Data table
         </summary>
 
-        <div className="mt-3 overflow-x-auto">
+        <div className="mt-3 overflow-x-auto" tabIndex={0}>
           <table className="table-scroll w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-border">

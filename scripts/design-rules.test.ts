@@ -32,6 +32,7 @@ describe("the rule set is intact", () => {
       "decorative-gradient",
       "malformed-color-utility",
       "faded-text-colour",
+      "raw-page-container",
       "oversized-radius",
     ]);
   });
@@ -169,6 +170,40 @@ describe("rule — oversized radii", () => {
         `<span className="rounded-full" />`,
         "src/components/evidence/evidence-chip.tsx",
       ),
+    ).toEqual([]);
+  });
+});
+
+describe("rule — raw page containers", () => {
+  const ROUTE = "src/app/knowledge/page.tsx";
+
+  it("fires on a route declaring its own page width", () => {
+    // The defect: five routes, three different max-w values, and a nav bar with
+    // a fourth — so the left edge moved as you navigated.
+    expect(ids(`<main className="mx-auto max-w-4xl px-5" />`, ROUTE)).toContain(
+      "raw-page-container",
+    );
+    expect(
+      ids(`<div className="mx-auto w-full max-w-5xl px-5" />`, ROUTE),
+    ).toContain("raw-page-container");
+  });
+
+  it("does not fire on a reading measure", () => {
+    // `max-w-2xl` on a lede is measure, not layout. Without `mx-auto` it is not
+    // a page container and this rule has no business with it.
+    expect(ids(`<p className="max-w-2xl text-lg" />`, ROUTE)).toEqual([]);
+    expect(ids(`<h1 className="max-w-3xl" />`, ROUTE)).toEqual([]);
+  });
+
+  it("is scoped to routes, so components may still centre things", () => {
+    expect(
+      ids(
+        `<div className="mx-auto max-w-5xl" />`,
+        "src/components/shell/page.tsx",
+      ),
+    ).toEqual([]);
+    expect(
+      ids(`<div className="mx-auto max-w-md" />`, "src/components/charts/x.tsx"),
     ).toEqual([]);
   });
 });

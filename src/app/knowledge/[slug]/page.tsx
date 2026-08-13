@@ -12,6 +12,7 @@ import {
 } from "@/lib/content/concepts";
 import { CATEGORY_META } from "@/lib/content/schema";
 import { citationUrl } from "@/lib/evidence/types";
+import { Page } from "@/components/shell/page";
 
 export function generateStaticParams() {
   return getAllConcepts().map((concept) => ({ slug: concept.slug }));
@@ -48,7 +49,7 @@ export default async function ConceptPage({
   );
 
   return (
-    <main id="main" className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-16">
+    <Page>
       <Breadcrumbs
         pathname="/knowledge/[slug]"
         leafLabel={concept.title}
@@ -136,6 +137,6 @@ export default async function ConceptPage({
           )}
         </aside>
       </div>
-    </main>
+    </Page>
   );
 }

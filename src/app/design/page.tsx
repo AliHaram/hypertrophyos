@@ -15,6 +15,7 @@ import {
   TYPE_UI,
 } from "@/lib/design/tokens";
 import { EVIDENCE_GRADE_META, type EvidenceGrade } from "@/lib/evidence/types";
+import { Page } from "@/components/shell/page";
 
 export const metadata: Metadata = {
   title: "Design system",
@@ -40,7 +41,7 @@ const GRADES: EvidenceGrade[] = [
  */
 export default function DesignSystemPage() {
   return (
-    <main id="main" className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-16">
+    <Page>
       <header className="border-b border-border pb-8">
         <p className="eyebrow">Design system</p>
         <h1 className="display-lg mt-2">Every primitive, every state</h1>
@@ -56,7 +57,7 @@ export default function DesignSystemPage() {
           pure — <Mono>#0b0a08</Mono> not black, <Mono>#f8f6f4</Mono> not white.
           Contrast is measured against both surface bases.
         </p>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" tabIndex={0}>
           <table className="table-scroll w-full border-collapse text-ui-sm">
             <thead>
               <tr className="border-b border-border">
@@ -243,7 +244,7 @@ export default function DesignSystemPage() {
       </Section>
 
       <Section title="Semantic colour" eyebrow="Colour">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" tabIndex={0}>
           <table className="table-scroll w-full border-collapse text-ui-sm">
             <thead>
               <tr className="border-b border-border">
@@ -411,7 +412,7 @@ export default function DesignSystemPage() {
         </p>
         <DoseResponseChart />
       </Section>
-    </main>
+    </Page>
   );
 }
 

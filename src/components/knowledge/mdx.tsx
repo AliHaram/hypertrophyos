@@ -103,7 +103,7 @@ const components = {
     );
   },
   table: ({ children, ...props }: El<"table">) => (
-    <div className="my-6 overflow-x-auto">
+    <div className="my-6 overflow-x-auto" tabIndex={0}>
       <table className="w-full border-collapse text-sm" {...props}>
         {children}
       </table>

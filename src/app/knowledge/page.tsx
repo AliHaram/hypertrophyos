@@ -4,6 +4,7 @@ import Link from "next/link";
 import { EvidenceChip } from "@/components/evidence/evidence-chip";
 import { getAllConcepts } from "@/lib/content/concepts";
 import { CATEGORY_META, CONCEPT_CATEGORIES } from "@/lib/content/schema";
+import { Page } from "@/components/shell/page";
 
 export const metadata: Metadata = {
   title: "Knowledge",
@@ -39,7 +40,7 @@ export default function KnowledgeIndex() {
   const concepts = getAllConcepts();
 
   return (
-    <main id="main" className="mx-auto max-w-4xl px-5 py-10 sm:px-8 sm:py-16">
+    <Page>
       <header className="border-b border-border pb-8">
         <p className="eyebrow">The knowledge layer</p>
         <h1 className="mt-2 font-prose text-4xl font-semibold tracking-tight sm:text-5xl">
@@ -126,6 +127,6 @@ export default function KnowledgeIndex() {
           Bibliography →
         </Link>
       </footer>
-    </main>
+    </Page>
   );
 }

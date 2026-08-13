@@ -50,7 +50,7 @@ export const APP_DEFAULT_SURFACE: Surface = "dark";
  * display scale, set against space, in the same register as the knowledge
  * layer it opens onto.
  */
-const LANDING_SURFACE: Surface = "light";
+export const LANDING_SURFACE: Surface = "light";
 
 /**
  * Route-prefix surface defaults, **in match order — longest prefix first**.

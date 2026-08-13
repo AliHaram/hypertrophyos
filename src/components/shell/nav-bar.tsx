@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { PAGE_CONTAINER } from "@/components/shell/page";
 import { NAV, UTILITY, mobileSections, sectionFor } from "@/lib/navigation/routes";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,24 @@ function phaseLabel(section: (typeof NAV)[number]): string | undefined {
     : undefined;
 }
 
+/**
+ * The wordmark, and the way back out.
+ *
+ * Doubles as the front door: without it the landing page was unreachable once
+ * you entered the app, and the mobile viewport had no header at all to hang the
+ * theme control on. One element, both problems.
+ */
+function Wordmark() {
+  return (
+    <Link
+      href="/"
+      className="font-mono text-ui-2xs uppercase tracking-eyebrow text-text-strong transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted"
+    >
+      HypertrophyOS
+    </Link>
+  );
+}
+
 export function TopBar({ children }: { children?: React.ReactNode }) {
   const pathname = usePathname();
   const active = sectionFor(pathname);
@@ -32,48 +51,77 @@ export function TopBar({ children }: { children?: React.ReactNode }) {
       aria-label="Primary"
       className="hidden border-b border-border md:block"
     >
-      <div className="mx-auto flex max-w-6xl items-stretch gap-1 px-5 sm:px-8">
-        {NAV.map((section) => {
-          const phase = phaseLabel(section);
-          const isActive = active?.id === section.id;
+      <div className={cn(PAGE_CONTAINER, "flex items-stretch gap-6")}>
+        <div className="flex items-center">
+          <Wordmark />
+        </div>
 
-          if (phase) {
+        {/*
+          Pulled left by its own padding so the first link's text sits on the
+          same vertical as the page content below it, rather than 12px inside it.
+        */}
+        <div className="-ml-3 flex items-stretch">
+          {NAV.map((section) => {
+            const phase = phaseLabel(section);
+            const isActive = active?.id === section.id;
+
+            if (phase) {
+              return (
+                <span
+                  key={section.id}
+                  aria-disabled="true"
+                  className="flex items-center gap-1.5 border-b-2 border-transparent px-3 py-3.5 text-sm text-text-muted"
+                >
+                  {section.label}
+                  <span className="font-mono text-ui-2xs uppercase tracking-eyebrow">
+                    · {phase}
+                  </span>
+                </span>
+              );
+            }
+
             return (
-              <span
+              <Link
                 key={section.id}
-                aria-disabled="true"
-                title={`${section.label} arrives in ${phase}`}
-                className="flex items-center gap-2 border-b-2 border-transparent px-3 py-3.5 text-sm text-text-muted"
+                href={section.href}
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                  "flex items-center border-b-2 px-3 py-3.5 text-sm transition-colors",
+                  "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-text-muted",
+                  isActive
+                    ? "border-text-strong font-medium text-text-strong"
+                    : "border-transparent text-muted-foreground hover:text-foreground",
+                )}
               >
                 {section.label}
-                <span className="font-mono text-ui-2xs uppercase tracking-eyebrow">
-                  · {phase}
-                </span>
-              </span>
+              </Link>
             );
-          }
-
-          return (
-            <Link
-              key={section.id}
-              href={section.href}
-              aria-current={isActive ? "page" : undefined}
-              className={cn(
-                "flex items-center border-b-2 px-3 py-3.5 text-sm transition-colors",
-                "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-text-muted",
-                isActive
-                  ? "border-text-strong font-medium text-text-strong"
-                  : "border-transparent text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {section.label}
-            </Link>
-          );
-        })}
+          })}
+        </div>
 
         <div className="ml-auto flex items-center gap-4">{children}</div>
       </div>
     </nav>
+  );
+}
+
+/**
+ * Header for small viewports.
+ *
+ * The shell previously had no header below `md` at all, which meant the surface
+ * control did not exist on a phone — it was passed as children to a bar that was
+ * `hidden md:block`. On a product whose primary context is standing in a gym,
+ * the phone is the case that matters most, so it gets the wordmark and the
+ * control in a real header.
+ */
+export function MobileHeader({ children }: { children?: React.ReactNode }) {
+  return (
+    <div className="border-b border-border md:hidden">
+      <div className={cn(PAGE_CONTAINER, "flex items-center gap-4 py-3")}>
+        <Wordmark />
+        <div className="ml-auto flex items-center">{children}</div>
+      </div>
+    </div>
   );
 }
 
@@ -92,7 +140,7 @@ export function BottomBar() {
 
   return (
     <nav
-      aria-label="Primary"
+      aria-label="Sections"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
@@ -139,47 +187,42 @@ export function BottomBar() {
  */
 export function ChromeMenu() {
   return (
-    <div className="border-t border-border md:border-0">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-5 gap-y-2 px-5 py-3 sm:px-8 md:px-0 md:py-0">
-        <span className="font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground md:hidden">
-          Coming later
-        </span>
-        <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 md:hidden">
-          {NAV.filter((section) => section.status.kind === "planned").map(
-            (section) => (
-              <li
-                key={section.id}
-                className="text-sm text-text-muted"
-              >
-                {section.label}
-                <span className="ml-1.5 font-mono text-ui-2xs uppercase tracking-eyebrow">
-                  {phaseLabel(section)}
-                </span>
-              </li>
-            ),
-          )}
-        </ul>
-
-        {UTILITY.map((item) =>
-          item.status.kind === "live" ? (
-            <Link
-              key={item.id}
-              href={item.href}
-              className="font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted"
-            >
-              {item.label}
-            </Link>
-          ) : (
-            <span
-              key={item.id}
-              aria-disabled="true"
-              className="font-mono text-ui-2xs uppercase tracking-eyebrow text-text-muted"
-            >
-              {item.label} · {phaseLabel(item)}
-            </span>
+    <div className={cn(PAGE_CONTAINER, "flex flex-wrap items-center gap-x-5 gap-y-2 py-4")}>
+      <span className="font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground md:hidden">
+        Coming later
+      </span>
+      <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 md:hidden">
+        {NAV.filter((section) => section.status.kind === "planned").map(
+          (section) => (
+            <li key={section.id} className="text-sm text-text-muted">
+              {section.label}
+              <span className="ml-1.5 font-mono text-ui-2xs uppercase tracking-eyebrow">
+                {phaseLabel(section)}
+              </span>
+            </li>
           ),
         )}
-      </div>
+      </ul>
+
+      {UTILITY.map((item) =>
+        item.status.kind === "live" ? (
+          <Link
+            key={item.id}
+            href={item.href}
+            className="font-mono text-ui-2xs uppercase tracking-eyebrow text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted"
+          >
+            {item.label}
+          </Link>
+        ) : (
+          <span
+            key={item.id}
+            aria-disabled="true"
+            className="font-mono text-ui-2xs uppercase tracking-eyebrow text-text-muted"
+          >
+            {item.label} · {phaseLabel(item)}
+          </span>
+        ),
+      )}
     </div>
   );
 }

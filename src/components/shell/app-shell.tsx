@@ -1,6 +1,11 @@
 import { cookies } from "next/headers";
 
-import { BottomBar, ChromeMenu, TopBar } from "@/components/shell/nav-bar";
+import {
+  BottomBar,
+  ChromeMenu,
+  MobileHeader,
+  TopBar,
+} from "@/components/shell/nav-bar";
 import { ThemeControl } from "@/components/shell/theme-control";
 import { SURFACE_COOKIE, type Surface, resolveSurface } from "@/lib/design/surface";
 
@@ -40,6 +45,9 @@ export async function AppShell({
         <TopBar>
           <ThemeControl current={preference} />
         </TopBar>
+        <MobileHeader>
+          <ThemeControl current={preference} />
+        </MobileHeader>
       </header>
 
       <div className="flex-1 pb-20 md:pb-0">{children}</div>
