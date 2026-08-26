@@ -41,7 +41,29 @@ export default defineConfig({
     // makes the offending node findable.
     trace: "retain-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  /*
+    Two viewports, because a defect class can live in exactly one of them.
+
+    The sweep ran desktop-only until three `overflow-x-auto` table containers
+    shipped keyboard-unreachable at phone width — `scrollable-region-focusable`
+    fires only when the content actually overflows, which at 1440 it did not.
+    A gate that cannot see the viewport most of this product's users are
+    standing in a gym holding is not covering the thing it claims to cover.
+
+    1440 and 375 are the real edges: the widest layout the design tops out at,
+    and the narrowest phone still worth supporting. Everything between them is
+    an interpolation of the two.
+  */
+  projects: [
+    {
+      name: "desktop",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } },
+    },
+    {
+      name: "mobile",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 375, height: 812 } },
+    },
+  ],
   webServer: {
     command: `pnpm exec next start --port ${PORT}`,
     url: BASE_URL,
