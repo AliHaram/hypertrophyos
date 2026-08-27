@@ -132,7 +132,6 @@ const components = {
 
   // Evidence primitives
   Claim,
-  Cite: CitationRef,
   Uncertainty,
   EvidenceChip,
 
@@ -164,6 +163,15 @@ export function ConceptBody({
   const index = glossaryIndex();
   const pass = createGlossaryPass(index, { skipSlug: slug });
 
+  /*
+    A paper cited three times in one essay needs three distinct panel ids, or
+    the second and third markers open the first one's popover. Counting here
+    rather than inside `CitationRef` is what makes "the page" the unit: the
+    component cannot know what document it is in, and only uniqueness matters,
+    so this is safe regardless of the order React happens to render siblings.
+  */
+  const citationCounts = new Map<string, number>();
+
   return (
     <MDXRemote
       source={source}
@@ -175,6 +183,11 @@ export function ConceptBody({
           here rather than inside `GlossaryTerm` keeps that component a pure
           function of an entry, which is what lets the plain-prose path reuse it.
         */
+        Cite: ({ id }: { id: string }) => {
+          const occurrence = (citationCounts.get(id) ?? 0) + 1;
+          citationCounts.set(id, occurrence);
+          return <CitationRef id={id} occurrence={occurrence} />;
+        },
         [GLOSSARY_COMPONENT]: ({
           term,
           slug: termSlug,

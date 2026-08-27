@@ -342,6 +342,32 @@
     color: var(--surface-text-muted);
   }
 
+  /*
+    A reference record is a larger object than a definition: a title, the
+    provenance, the paper's own finding, and two ways out. It gets more width
+    and a rule separating what the paper reported from everything else.
+  */
+  .citation-panel {
+    width: min(26rem, calc(100vw - var(--spacing-8)));
+  }
+
+  .citation-panel-finding {
+    display: block;
+    margin-block-start: var(--spacing-3);
+    padding-block-start: var(--spacing-3);
+    border-block-start: 1px solid var(--surface-hairline);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--surface-text-body);
+  }
+
+  .citation-panel-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--spacing-2) var(--spacing-5);
+  }
+
   .glossary-panel-link {
     display: inline-block;
     margin-block-start: var(--spacing-3);

@@ -1,27 +1,40 @@
 import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import { getCitation } from "@/lib/evidence/citations";
 import { citationUrl } from "@/lib/evidence/types";
-import { cn } from "@/lib/utils";
 
 /**
  * Inline reference to a paper.
  *
- * Expands on hover or focus into the full record and, crucially, the paper's
- * own reported finding — so the reader can check what the study actually said
- * against the claim it is being used to support, without leaving the page.
+ * Expands into the full record and, crucially, the paper's own reported
+ * finding — so a reader can check what the study actually said against the
+ * claim it is being used to support, without leaving the page.
+ *
+ * That was previously a hover card wrapped around a link to the DOI, which
+ * meant the crucial part did not exist on a phone: a tap followed the link and
+ * the reader arrived at a publisher's abstract having never seen the finding
+ * the app was resting on. Now the marker is a button over a native popover,
+ * and the DOI is a link *inside* it. Going to the paper takes one more tap and
+ * is now a decision rather than an accident.
+ *
+ * Two routes out, deliberately: the paper itself, and the bibliography entry,
+ * which lists everything else in the app resting on the same source.
  */
 export function CitationRef({
   id,
-  className,
+  occurrence = 1,
 }: {
   id: string;
-  className?: string;
+  /**
+   * Which appearance of this citation on the page this is, counting from one.
+   *
+   * A paper cited three times in one essay would otherwise produce three
+   * elements sharing an id, which breaks `popovertarget` — the second and
+   * third markers would open the first one's panel. The caller counts, because
+   * only the caller knows what "the page" is.
+   */
+  occurrence?: number;
 }) {
   const citation = getCitation(id);
 
@@ -32,46 +45,59 @@ export function CitationRef({
   }
 
   const url = citationUrl(citation);
+  const panelId = `citation-${id}-${occurrence}`;
+  const anchorName = `--citation-${id}-${occurrence}`;
+  const firstAuthor = citation.authors.split(",")[0];
 
   return (
-    <HoverCard>
-      <HoverCardTrigger
-        delay={120}
-        closeDelay={80}
-        render={
-          <a
-            href={url}
-            target="_blank"
-            rel="noreferrer"
-            className={cn(
-              // Sizing and the baseline lift live in the .citation-ref class:
-              // full superscript at this density opened visible gaps in the
-              // leading of every paragraph containing a reference.
-              "citation-ref inline-flex items-baseline rounded-sm text-text-body",
-              "hover:text-text-strong hover:decoration-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-muted",
-              className,
-            )}
-          />
-        }
+    <>
+      <button
+        type="button"
+        popoverTarget={panelId}
+        aria-details={panelId}
+        // Sizing and the baseline lift live in .citation-ref: full superscript
+        // at this density opened visible gaps in the leading of every
+        // paragraph containing a reference.
+        className="citation-ref glossary-term"
+        style={{ "--glossary-anchor": anchorName } as React.CSSProperties}
       >
-        {citation.authors.split(",")[0]} {citation.year}
-      </HoverCardTrigger>
-      <HoverCardContent side="top" className="w-96 font-sans">
-        <p className="eyebrow mb-2">{citation.design.replace(/-/g, " ")}</p>
-        <p className="text-sm font-medium leading-snug">{citation.title}</p>
-        <p className="mt-1.5 text-xs text-muted-foreground">
+        {firstAuthor} {citation.year}
+        <span className="glossary-term-hint sr-only"> — show this reference</span>
+      </button>
+
+      <span
+        popover="auto"
+        id={panelId}
+        className="glossary-panel citation-panel"
+        style={{ "--glossary-anchor": anchorName } as React.CSSProperties}
+      >
+        <span className="eyebrow block">{citation.design.replace(/-/g, " ")}</span>
+        <span className="glossary-panel-title mt-2 block">{citation.title}</span>
+        <span className="glossary-panel-body">
           {citation.authors} · {citation.journal}
-        </p>
-        <p className="mt-3 border-t border-border pt-3 text-xs leading-relaxed text-foreground">
-          {citation.keyFinding}
-        </p>
-        {url && (
-          <p className="mt-3 flex items-center gap-1 font-mono text-ui-2xs text-text-strong">
-            <ExternalLink className="size-3" aria-hidden="true" />
-            {citation.doi ? `doi:${citation.doi}` : `PMID ${citation.pmid}`}
-          </p>
-        )}
-      </HoverCardContent>
-    </HoverCard>
+        </span>
+        {/*
+          The paper's own reported result, kept separate from the app's reading
+          of it by a rule. The distinction is the point of showing it at all.
+        */}
+        <span className="citation-panel-finding">{citation.keyFinding}</span>
+        <span className="citation-panel-links">
+          {url && (
+            <a
+              href={url}
+              target="_blank"
+              rel="noreferrer"
+              className="glossary-panel-link inline-flex items-center gap-1.5"
+            >
+              <ExternalLink className="size-3" aria-hidden="true" />
+              {citation.doi ? `doi:${citation.doi}` : `PMID ${citation.pmid}`}
+            </a>
+          )}
+          <Link href={`/citations#${id}`} className="glossary-panel-link">
+            What else cites this
+          </Link>
+        </span>
+      </span>
+    </>
   );
 }
