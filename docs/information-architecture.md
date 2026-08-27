@@ -54,10 +54,10 @@ what the slice then changed:
   `phase-2`.*
 - **`/citations` was at `/knowledge/citations`.** *Now moved, with a tested 308.
   See ADR 0005.*
-- **`/glossary` does not exist**, but is derivable today. `getGlossary()` in
-  `lib/content/concepts.ts` already returns the full term → concept map built
-  from concept frontmatter. The index page is close to free. **Still to build,
-  in D4.**
+- **`/glossary` did not exist**, but was derivable. *Now built (D4.2): every
+  alias in one alphabetical sequence, filterable by grade, with orphaned terms
+  listed against their phase and "used in" derived by running the same remark
+  pass the pages themselves use.*
 - **There is no anatomical map component**, and no SVG body data anywhere in
   `src/` or `public/`. `muscles.svgPathId` is a column with no consumer.
   **Deferred deliberately** — see §8.
@@ -249,6 +249,14 @@ lands, and they should not be able to disagree about what a phase is called.
 ## 5. The orphan-route check
 
 `scripts/check-route-map.mjs`, wired into CI after `pnpm lint`.
+
+> **Not built as of D4.** This section describes a gate that does not exist. D2
+> shipped the nav bar under an explicit "no new gates" instruction and the
+> check was never written; D4 stayed inside its own scope rather than picking
+> it up. `/glossary` was added to `NAV` by hand, and nothing would have caught
+> it if it had not been. A document describing a checker that is not running is
+> the same defect one level up that ADR 0006 is about, so it is flagged here
+> rather than left reading as though it were live.
 
 It walks `src/app`, finds every `page.tsx`, and converts its directory path to a
 route pattern — stripping route groups `(...)`, preserving `[slug]` and
