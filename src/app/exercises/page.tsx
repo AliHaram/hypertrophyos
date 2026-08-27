@@ -56,6 +56,26 @@ function readParam(value: string | string[] | undefined): string | undefined {
   return trimmed === "" ? undefined : trimmed;
 }
 
+/**
+ * A search-param value, accepted only if it is one the filter rail offers.
+ *
+ * Search params are user input and arrive from links, history and hand-typed
+ * URLs. Casting them to the enum meant `?peak=bogus` filtered everything out
+ * and the empty state then explained that "nothing in the library is hardest
+ * in the bogus position" — reporting a nonexistent category back to the reader
+ * as though it were real. An unrecognised value is not a filter that matched
+ * nothing; it is not a filter.
+ */
+function readOneOf<T extends string>(
+  value: string | string[] | undefined,
+  allowed: readonly T[],
+): T | undefined {
+  const raw = readParam(value);
+  return raw !== undefined && (allowed as readonly string[]).includes(raw)
+    ? (raw as T)
+    : undefined;
+}
+
 function matches(exercise: Exercise, filters: Filters): boolean {
   if (filters.peak && exercise.peakPosition !== filters.peak) return false;
   if (filters.equipment && exercise.equipment !== filters.equipment) {
@@ -88,10 +108,17 @@ export default async function ExercisesIndex({
   const params = await searchParams;
   const exercises = getAllExercises();
 
+  // Prime movers only. Filtering by every muscle any exercise touches would
+  // offer eighteen options over eight exercises, most of them returning one
+  // result for a muscle the exercise was not chosen to train.
+  const primeMovers = [
+    ...new Set(exercises.map((exercise) => primeMoverOf(exercise))),
+  ].sort((a, b) => muscleName(a).localeCompare(muscleName(b)));
+
   const filters: Filters = {
-    muscle: readParam(params.muscle),
-    equipment: readParam(params.equipment) as Equipment | undefined,
-    peak: readParam(params.peak) as PeakPosition | undefined,
+    muscle: readOneOf(params.muscle, primeMovers),
+    equipment: readOneOf(params.equipment, EQUIPMENT_FILTERS),
+    peak: readOneOf(params.peak, PEAK_POSITIONS),
   };
 
   const visible = exercises.filter((exercise) => matches(exercise, filters));
@@ -99,13 +126,6 @@ export default async function ExercisesIndex({
   // "is any filter set" and a blank is not set. `??` would answer a different
   // question and get it wrong: `"" ?? undefined ?? "quads"` is `""`.
   const active = [filters.muscle, filters.equipment, filters.peak].some(Boolean);
-
-  // Prime movers only. Filtering by every muscle any exercise touches would
-  // offer eighteen options over eight exercises, most of them returning one
-  // result for a muscle the exercise was not chosen to train.
-  const primeMovers = [
-    ...new Set(exercises.map((exercise) => primeMoverOf(exercise))),
-  ].sort((a, b) => muscleName(a).localeCompare(muscleName(b)));
 
   return (
     <Page>

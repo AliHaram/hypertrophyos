@@ -213,6 +213,17 @@ export default async function GlossaryPage({
           closes. Until then they read as ordinary prose: no underline, no
           definition, and no pretence that one exists.
         </p>
+        {orphans.length === 0 ? (
+          /*
+            An empty register is the state this whole mechanism is aiming at,
+            and it is the one most likely to be misread as a rendering bug.
+            It says so.
+          */
+          <p className="mt-6 border-y border-border py-8 text-center font-prose text-base text-foreground">
+            Nothing outstanding. Every term the app uses has a concept behind
+            it.
+          </p>
+        ) : (
         <ul className="mt-6 divide-y divide-border border-y border-border">
           {orphans.map((orphan) => (
             <li
@@ -233,6 +244,7 @@ export default async function GlossaryPage({
             </li>
           ))}
         </ul>
+        )}
       </section>
     </Page>
   );

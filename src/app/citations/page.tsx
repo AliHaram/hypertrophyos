@@ -37,6 +37,20 @@ export default function CitationsPage() {
         </p>
       </header>
 
+      {sorted.length === 0 && (
+        <p className="mt-10 border-y border-border py-14 text-center font-prose text-lg text-foreground">
+          The bibliography is empty. Every claim in the app is currently graded
+          on reasoning rather than on a paper —{" "}
+          <Link
+            href="/knowledge"
+            className="text-text-strong underline underline-offset-2"
+          >
+            the knowledge layer
+          </Link>{" "}
+          says which, on each one.
+        </p>
+      )}
+
       <ol className="mt-10 space-y-8">
         {sorted.map((citation) => {
           const url = citationUrl(citation);

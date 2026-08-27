@@ -53,6 +53,25 @@ export default function KnowledgeIndex() {
         </p>
       </header>
 
+      {concepts.length === 0 && (
+        /*
+          Not reachable while `content/concepts` has files in it — the loader
+          throws on an empty directory. It is here because an index that
+          renders nothing at all looks broken, and "looks broken" is the one
+          reading a reader cannot recover from on their own.
+        */
+        <p className="mt-10 border-y border-border py-14 text-center font-prose text-lg text-foreground">
+          Nothing has been written yet.{" "}
+          <Link
+            href="/exercises"
+            className="text-text-strong underline underline-offset-2"
+          >
+            The exercise library
+          </Link>{" "}
+          is where the app currently is.
+        </p>
+      )}
+
       <div className="mt-12 space-y-14">
         {CONCEPT_CATEGORIES.map((category) => {
           const inCategory = concepts.filter(
@@ -119,7 +138,13 @@ export default function KnowledgeIndex() {
         })}
       </div>
 
-      <footer className="mt-16 border-t border-border pt-8">
+      <footer className="mt-16 flex flex-wrap gap-x-8 gap-y-3 border-t border-border pt-8">
+        <Link
+          href="/glossary"
+          className="font-mono text-xs uppercase tracking-eyebrow text-text-strong hover:underline"
+        >
+          Glossary →
+        </Link>
         <Link
           href="/citations"
           className="font-mono text-xs uppercase tracking-eyebrow text-text-strong hover:underline"
