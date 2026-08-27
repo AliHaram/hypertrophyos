@@ -83,6 +83,17 @@ describe("buildGlossaryIndex", () => {
     );
   });
 
+  it("keeps each alias's authored casing for display", () => {
+    // The key is lowercased so matching is case-insensitive; the label is not.
+    // "MEV" printed as "mev" in an index reads as a typo, not an abbreviation.
+    const mev = index.aliases.find((entry) => entry.alias === "mev");
+    expect(mev?.display).toBe("MEV");
+    expect(
+      index.aliases.find((entry) => entry.alias === "mechanical tension")
+        ?.display,
+    ).toBe("Mechanical tension");
+  });
+
   it("indexes each concept's title as well as its declared terms", () => {
     expect(index.byAlias.get("mechanical tension")?.slug).toBe(
       "mechanical-tension",

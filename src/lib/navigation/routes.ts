@@ -72,6 +72,7 @@ export const NAV: readonly NavSection[] = [
     status: { kind: "live" },
     children: [
       { pattern: "/knowledge/[slug]", label: "Concept", dynamic: true },
+      { pattern: "/glossary", label: "Glossary" },
       { pattern: "/citations", label: "Bibliography" },
     ],
   },

@@ -71,6 +71,19 @@ const ORPHANED_TERMS: readonly OrphanedTerm[] = [
   },
 ];
 
+/**
+ * The register, for the glossary index to show.
+ *
+ * Listed on `/glossary` rather than hidden, with the phase each is due in.
+ * A knowledge layer that shows only what it has written is indistinguishable
+ * from one that believes it is finished, and the reader has no way to tell
+ * which they are looking at. The deadline is the honest part: these are not
+ * "coming soon", they are overdue at a named point.
+ */
+export function allOrphanedTerms(): readonly OrphanedTerm[] {
+  return ORPHANED_TERMS;
+}
+
 function phaseIndex(phase: Phase): number {
   return PHASES.indexOf(phase);
 }

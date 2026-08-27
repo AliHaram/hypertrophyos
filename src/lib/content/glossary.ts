@@ -32,6 +32,21 @@ export interface GlossarySource extends GlossaryEntry {
   terms: readonly string[];
 }
 
+interface IndexedAlias {
+  /** Lowercased, for matching. */
+  alias: string;
+  /**
+   * The alias as its author wrote it.
+   *
+   * Matching is case-insensitive, so the key has to be lowercased — but the
+   * key is not what a reader should be shown. "DOMS", "MEV" and "mTORC1" are
+   * not words that have a lowercase form, and an index that prints them as
+   * "doms" and "mev" looks like it does not know what they are.
+   */
+  display: string;
+  entry: GlossaryEntry;
+}
+
 export interface GlossaryIndex {
   /**
    * Aliases in match order: longest first, so the most specific one wins.
@@ -42,7 +57,7 @@ export interface GlossaryIndex {
    * "reps in reserve" must precede "reps" or the short alias eats the long one
    * and the reader gets the wrong concept.
    */
-  readonly aliases: readonly { alias: string; entry: GlossaryEntry }[];
+  readonly aliases: readonly IndexedAlias[];
   /** Lowercased alias -> owning concept. */
   readonly byAlias: ReadonlyMap<string, GlossaryEntry>;
   readonly bySlug: ReadonlyMap<string, GlossaryEntry>;
@@ -82,7 +97,7 @@ export function buildGlossaryIndex(
   sources: readonly GlossarySource[],
 ): GlossaryIndex {
   const bySlug = new Map<string, GlossaryEntry>();
-  const owners = new Map<string, GlossaryEntry>();
+  const owners = new Map<string, IndexedAlias>();
 
   for (const source of sources) {
     const entry: GlossaryEntry = {
@@ -94,14 +109,14 @@ export function buildGlossaryIndex(
     bySlug.set(entry.slug, entry);
 
     for (const term of [source.title, ...source.terms]) {
-      const alias = term.trim().toLowerCase();
+      const display = term.trim();
+      const alias = display.toLowerCase();
       if (alias === "" || owners.has(alias)) continue;
-      owners.set(alias, entry);
+      owners.set(alias, { alias, display, entry });
     }
   }
 
-  const aliases = [...owners.entries()]
-    .map(([alias, entry]) => ({ alias, entry }))
+  const aliases = [...owners.values()]
     // Longest first. Ties broken alphabetically so the index is deterministic
     // across builds rather than dependent on Map iteration order.
     .sort((a, b) =>
@@ -116,7 +131,12 @@ export function buildGlossaryIndex(
           "giu",
         );
 
-  return { aliases, byAlias: owners, bySlug, pattern };
+  return {
+    aliases,
+    byAlias: new Map(aliases.map((entry) => [entry.alias, entry.entry])),
+    bySlug,
+    pattern,
+  };
 }
 
 export interface GlossaryPassOptions {

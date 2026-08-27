@@ -16,6 +16,16 @@ export const evidenceGradeSchema = z.enum([
 export type EvidenceGrade = z.infer<typeof evidenceGradeSchema>;
 
 /**
+ * The grades in descending confidence, taken from the schema rather than
+ * restated beside it.
+ *
+ * Anything that renders a grade in order — a filter row, a legend, the design
+ * system's ramp — reads this. A second hand-written list would be one more
+ * structure whose correctness depends on an order nothing asserts.
+ */
+export const EVIDENCE_GRADES = evidenceGradeSchema.options;
+
+/**
  * Note on `mixed` versus `mechanical-inference`.
  *
  * These two are the pair most easily confused, and confusing them is

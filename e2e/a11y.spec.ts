@@ -52,6 +52,11 @@ function exerciseRoutes(): string[] {
 const ROUTES = [
   "/",
   "/knowledge",
+  "/glossary",
+  // A filtered view, and the grade with nothing in it — the empty state is a
+  // rendered surface with its own headings and links.
+  "/glossary?grade=strong",
+  "/glossary?grade=weak",
   "/citations",
   "/design",
   "/exercises",
