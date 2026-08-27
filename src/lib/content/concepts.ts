@@ -14,6 +14,8 @@ import {
 } from "@/lib/evidence/integrity";
 import type { Citation } from "@/lib/evidence/types";
 
+import { type GlossaryIndex, buildGlossaryIndex } from "./glossary";
+
 import {
   CONCEPT_CATEGORIES,
   type Concept,
@@ -132,43 +134,21 @@ export function getConceptCitations(slug: string): Citation[] {
 }
 
 /**
- * Term lookup table for the ambient glossary.
+ * The ambient glossary index, built from the corpus once per process.
  *
- * Keyed by lowercased term, including each concept's own title, so `<Term>`
- * can resolve a definition anywhere in the app without the caller knowing
- * which concept owns it.
+ * Every registered term — each concept's title plus the aliases in its
+ * frontmatter — resolves to the concept that owns it. Callers do not need to
+ * know which concept that is, which is the point: prose anywhere in the app
+ * can be glossed without its author maintaining a link table.
+ *
+ * The matching rules live in `./glossary`, deliberately free of the filesystem
+ * so they can be tested as rules.
  */
-export interface GlossaryEntry {
-  slug: string;
-  title: string;
-  shortDefinition: string;
-  evidenceGrade: Concept["evidenceGrade"];
-}
+let glossaryCache: GlossaryIndex | undefined;
 
-let glossaryCache: Map<string, GlossaryEntry> | undefined;
-
-function getGlossary(): Map<string, GlossaryEntry> {
-  if (glossaryCache) return glossaryCache;
-
-  const glossary = new Map<string, GlossaryEntry>();
-  for (const concept of getAllConcepts()) {
-    const entry: GlossaryEntry = {
-      slug: concept.slug,
-      title: concept.title,
-      shortDefinition: concept.shortDefinition,
-      evidenceGrade: concept.evidenceGrade,
-    };
-    for (const term of [concept.title, ...concept.terms]) {
-      glossary.set(term.toLowerCase(), entry);
-    }
-  }
-
-  glossaryCache = glossary;
-  return glossary;
-}
-
-export function lookupTerm(term: string): GlossaryEntry | undefined {
-  return getGlossary().get(term.trim().toLowerCase());
+export function glossaryIndex(): GlossaryIndex {
+  glossaryCache ??= buildGlossaryIndex(getAllConcepts());
+  return glossaryCache;
 }
 
 /** Citation id -> concepts citing it. Powers the bibliography's back-links. */

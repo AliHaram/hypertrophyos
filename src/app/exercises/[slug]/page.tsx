@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { ResistanceProfileChart } from "@/components/charts/resistance-profile-chart";
 import { InvolvementTable } from "@/components/exercises/involvement-table";
+import { type Gloss, createGloss } from "@/components/knowledge/gloss";
 import { Breadcrumbs } from "@/components/shell/breadcrumbs";
 import { conceptDependencies } from "@/lib/exercises/concept-links";
 import { getAllExercises, getExercise, primeMoverOf } from "@/lib/exercises/library";
@@ -57,6 +58,14 @@ export default async function ExercisePage({
   const complements = complementsFor(exercise);
   const dependencies = conceptDependencies();
 
+  /*
+    One pass for the page, used in the order the prose is read: the figure's
+    derivation, then failure, stimulus-to-fatigue, setup, errors, and finally
+    the substitution tradeoffs. Reading order is the only order in which "first
+    occurrence" means anything to a reader.
+  */
+  const gloss = createGloss();
+
   return (
     <Page>
       <Breadcrumbs pathname="/exercises/[slug]" leafLabel={exercise.name} />
@@ -96,7 +105,7 @@ export default async function ExercisePage({
               },
             ]}
             subtitle="Relative torque demand across the range of motion, normalised so the peak is 1.00. Derived from the mechanics below, not measured."
-            source={exercise.resistanceProfileDerivation}
+            source={gloss(exercise.resistanceProfileDerivation)}
             className="mt-0"
           />
 
@@ -109,12 +118,12 @@ export default async function ExercisePage({
               {FAILURE_HEADLINE[exercise.failureProtocol]}
             </p>
             <p className="prose-concept mt-3">
-              {exercise.failureProtocolRationale}
+              {gloss(exercise.failureProtocolRationale)}
             </p>
           </Section>
 
           <Section title="Stimulus to fatigue">
-            <p className="prose-concept">{exercise.sfrRationale}</p>
+            <p className="prose-concept">{gloss(exercise.sfrRationale)}</p>
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
               A judgement, not a measurement. No validated stimulus-to-fatigue
               metric exists, so this rating is reasoned from the mechanical
@@ -127,7 +136,7 @@ export default async function ExercisePage({
             <ul className="prose-concept list-disc space-y-2 pl-6 marker:text-muted-foreground">
               {exercise.setupCues.map((cue) => (
                 <li key={cue} className="pl-1">
-                  {cue}
+                  {gloss(cue)}
                 </li>
               ))}
             </ul>
@@ -137,7 +146,7 @@ export default async function ExercisePage({
             <ul className="prose-concept list-disc space-y-2 pl-6 marker:text-muted-foreground">
               {exercise.commonErrors.map((error) => (
                 <li key={error} className="pl-1">
-                  {error}
+                  {gloss(error)}
                 </li>
               ))}
             </ul>
@@ -145,6 +154,7 @@ export default async function ExercisePage({
 
           <Section title="If you cannot do this one">
             <SubstitutionList
+              gloss={gloss}
               results={substitutes}
               emptyHeadline={`Nothing in the library substitutes for this.`}
               emptyBody={`A substitute has to share the prime mover — ${muscleName(primeMoverOf(exercise))} here — and no other movement in these eight does. That is a real gap rather than a filtered-out result, and padding the list with something that trains a different muscle would be worse than saying so.`}
@@ -153,6 +163,7 @@ export default async function ExercisePage({
 
           <Section title="What to pair it with">
             <SubstitutionList
+              gloss={gloss}
               results={complements}
               emptyHeadline="No complement in the library yet."
               emptyBody={`A complement loads the same muscle from a different part of the range. Everything here training ${muscleName(primeMoverOf(exercise))} peaks in the same position as this does, so pairing them would load one part of the range twice.`}
@@ -254,10 +265,13 @@ function Section({
 }
 
 function SubstitutionList({
+  gloss,
   results,
   emptyHeadline,
   emptyBody,
 }: {
+  /** The page's pass, so tradeoff prose shares one seen-set with the rest. */
+  gloss: Gloss;
   results: readonly RankedSubstitution[];
   emptyHeadline: string;
   emptyBody: string;
@@ -321,7 +335,7 @@ function SubstitutionList({
                         ? "Cost: "
                         : "Difference: "}
                   </span>
-                  {tradeoff.note}
+                  {gloss(tradeoff.note)}
                 </span>
               </li>
             ))}

@@ -216,6 +216,142 @@
     font: inherit;
     line-height: inherit;
     color: inherit;
+    /*
+      A button in the middle of a sentence must not change the line box. No
+      padding, no background, baseline alignment, and `display: inline` so it
+      wraps across lines like the words either side of it — an inline-block
+      would keep the term whole and open a ragged gap before it.
+    */
+    display: inline;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    text-align: inherit;
+    cursor: help;
+    /*
+      A dotted rule, not a link colour. On a page where most sentences contain
+      a defined term, link-blue on every one of them would be unreadable — and
+      hue in this app means an evidence grade or a volume zone.
+    */
+    text-decoration: underline dotted;
+    text-decoration-color: var(--surface-text-muted);
+    text-underline-offset: 3px;
+    anchor-name: var(--glossary-anchor);
+  }
+
+  .glossary-term:hover {
+    color: var(--surface-text-strong);
+    text-decoration-color: var(--surface-text-strong);
+  }
+
+  /*
+    The glossary panel.
+
+    A native `[popover]`, so the browser supplies the top layer, Escape,
+    light-dismiss and focus handling. Two presentations, and both are complete:
+
+    - Centred card. The default, and what every browser without CSS anchor
+      positioning gets. Also what phones get regardless of support, because an
+      anchored panel beside a word in a 375px column has nowhere to go.
+    - Anchored beside the term. Applied only where `anchor-name` is supported
+      *and* there is width to hang it in.
+
+    Written centred-first rather than anchored-first deliberately. The fallback
+    is the state that has to be right, so it is the one that is not behind a
+    feature query.
+  */
+  .glossary-panel {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    height: max-content;
+    width: min(20rem, calc(100vw - var(--spacing-8)));
+    padding: var(--spacing-4);
+    border: 1px solid var(--surface-hairline);
+    border-radius: var(--radius-md);
+    background: var(--surface-surface-raised);
+    color: var(--surface-text-body);
+    box-shadow: var(--shadow-overlay);
+    font-family: var(--font-ui);
+  }
+
+  /*
+    Browsers that do not implement `popover` treat the panel as an ordinary
+    span and would render the definition inline, in the middle of the
+    sentence — the one degradation that is worse than having no glossary. This
+    hides it there, and hides the affordance hint with it, so the term reads as
+    ordinary prose rather than as a control that does nothing.
+
+    `popover` has been Baseline Widely Available across all three engines since
+    early 2025, so this is a floor rather than a supported path.
+  */
+  @supports not selector(:popover-open) {
+    .glossary-panel,
+    .glossary-term-hint {
+      display: none;
+    }
+
+    .glossary-term {
+      text-decoration: none;
+      cursor: inherit;
+    }
+  }
+
+  @supports (anchor-name: --probe) {
+    @media (width >= 48rem) {
+      .glossary-panel {
+        position-anchor: var(--glossary-anchor);
+        inset: auto;
+        margin: 0;
+        margin-block-start: var(--spacing-2);
+        position-area: block-end span-inline-end;
+        /*
+          Order matters: flip vertically before flipping horizontally, so a
+          term near the bottom of the viewport opens upward in the same column
+          rather than jumping sideways.
+        */
+        position-try-fallbacks:
+          block-start span-inline-end,
+          block-end span-inline-start,
+          block-start span-inline-start;
+      }
+    }
+  }
+
+  .glossary-panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-3);
+  }
+
+  .glossary-panel-title {
+    font-family: var(--font-prose);
+    font-size: var(--text-prose-sm);
+    line-height: var(--text-prose-sm--line-height);
+    font-weight: 600;
+    color: var(--surface-text-strong);
+  }
+
+  .glossary-panel-body {
+    display: block;
+    margin-block-start: var(--spacing-2);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--surface-text-muted);
+  }
+
+  .glossary-panel-link {
+    display: inline-block;
+    margin-block-start: var(--spacing-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-ui-2xs);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--surface-text-strong);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   /*

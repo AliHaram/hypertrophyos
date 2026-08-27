@@ -1,4 +1,5 @@
 import { EVIDENCE_GRADE_META, type EvidenceGrade } from "@/lib/evidence/types";
+import { DOT_COLOR } from "@/components/evidence/evidence-mark";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -17,15 +18,7 @@ import {
  * separate the hues — the label is always present, never colour alone.
  */
 
-const DOT_COLOR: Record<EvidenceGrade, string> = {
-  strong: "bg-evidence-strong",
-  mixed: "bg-evidence-mixed",
-  // Blue, from the Phase 1 validated palette. Deliberately not a fourth hue
-  // invented for the purpose, and deliberately not adjacent to amber — the
-  // grade it is most often confused with.
-  "mechanical-inference": "bg-evidence-mechanical",
-  weak: "bg-evidence-weak",
-};
+
 
 export function EvidenceChip({
   grade,

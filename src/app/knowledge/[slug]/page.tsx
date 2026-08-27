@@ -73,7 +73,7 @@ export default async function ConceptPage({
 
       <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem]">
         <article>
-          <ConceptBody source={concept.body} />
+          <ConceptBody slug={concept.slug} source={concept.body} />
         </article>
 
         <aside className="space-y-8 lg:sticky lg:top-10 lg:self-start">

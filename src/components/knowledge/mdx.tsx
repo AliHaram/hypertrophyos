@@ -8,12 +8,15 @@ import { VolumeLandmarkScale } from "@/components/charts/volume-landmark-scale";
 import { CitationRef } from "@/components/evidence/citation-ref";
 import { Claim } from "@/components/evidence/claim";
 import { EvidenceChip } from "@/components/evidence/evidence-chip";
-import { Term } from "@/components/evidence/term";
 import { Uncertainty } from "@/components/evidence/uncertainty";
+import { GlossaryTerm } from "@/components/knowledge/glossary-term";
 import { DoubleProgressionDemo } from "@/components/knowledge/double-progression-demo";
 import { OverloadLeversModule } from "@/components/knowledge/overload-levers-module";
 import { PeakPositionExamples } from "@/components/knowledge/peak-position-examples";
 import { ResistanceProfileComparison } from "@/components/knowledge/resistance-profile-comparison";
+import { glossaryIndex } from "@/lib/content/concepts";
+import { createGlossaryPass } from "@/lib/content/glossary";
+import { remarkGlossary } from "@/lib/content/remark-glossary";
 
 /**
  * Everything concept MDX can use.
@@ -130,7 +133,6 @@ const components = {
   // Evidence primitives
   Claim,
   Cite: CitationRef,
-  Term,
   Uncertainty,
   EvidenceChip,
 
@@ -144,6 +146,59 @@ const components = {
   PeakPositionExamples,
 };
 
-export function ConceptBody({ source }: { source: string }) {
-  return <MDXRemote source={source} components={components} />;
+/**
+ * The name the remark pass emits. Must match the key in the MDX scope below —
+ * a mismatch produces "Expected component X to be defined" at render, so this
+ * is one constant rather than two string literals that have to agree.
+ */
+const GLOSSARY_COMPONENT = "GlossaryTerm";
+
+export function ConceptBody({
+  slug,
+  source,
+}: {
+  /** The concept being rendered. Its own terms are not linked to itself. */
+  slug: string;
+  source: string;
+}) {
+  const index = glossaryIndex();
+  const pass = createGlossaryPass(index, { skipSlug: slug });
+
+  return (
+    <MDXRemote
+      source={source}
+      components={{
+        ...components,
+        /*
+          The remark pass can only put strings in JSX attributes, so it emits a
+          slug and this closes over the index to resolve it. Doing the lookup
+          here rather than inside `GlossaryTerm` keeps that component a pure
+          function of an entry, which is what lets the plain-prose path reuse it.
+        */
+        [GLOSSARY_COMPONENT]: ({
+          term,
+          slug: termSlug,
+        }: {
+          term: string;
+          slug: string;
+        }) => {
+          const entry = index.bySlug.get(termSlug);
+          return entry ? <GlossaryTerm term={term} entry={entry} /> : <>{term}</>;
+        },
+      }}
+      options={{
+        mdxOptions: {
+          /*
+            Tuple form, not `remarkGlossary({...})`. unified calls each entry as
+            an attacher and uses what it returns as the transformer; handing it
+            an already-built transformer means it gets called with no arguments
+            and walks `undefined`.
+          */
+          remarkPlugins: [
+            [remarkGlossary, { pass, componentName: GLOSSARY_COMPONENT }],
+          ],
+        },
+      }}
+    />
+  );
 }

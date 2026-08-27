@@ -124,7 +124,9 @@ export const RULES = [
       `"${m}" — containers cap at 4px (rounded-md); rounded-full is for pills and avatars only`,
     // Pills and dots are genuine full-round cases.
     allowlist: [
+      // The evidence-grade dot, in both the tooltip chip and the static mark.
       "src/components/evidence/evidence-chip.tsx",
+      "src/components/evidence/evidence-mark.tsx",
       "src/components/ui/",
       "src/components/charts/",
     ],
